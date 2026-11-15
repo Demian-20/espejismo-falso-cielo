@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cnfhfqg7uxlie"]
+
+[ext_resource type="Texture2D" uid="uid://ewh25ywflytp" path="res://assets/plaza_zaragoza.jpg" id="1_sgq4k"]
+[ext_resource type="PackedScene" uid="uid://capg043u75iy1" path="res://scenes/jugador.tscn" id="2_k02xx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_atg7p"]
+size = Vector2(69, 1518)
+
+[node name="PlazaZaragoza" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_sgq4k")
+centered = false
+
+[node name="Jugador" parent="." instance=ExtResource("2_k02xx")]
+position = Vector2(989, 694)
+
+[node name="Paredes" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Paredes"]
+position = Vector2(729, 766)
+shape = SubResource("RectangleShape2D_atg7p")
