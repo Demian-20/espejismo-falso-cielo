@@ -48,6 +48,8 @@ static func boton(texto: String) -> Button:
 	b.add_theme_stylebox_override("hover", resalte)
 	b.add_theme_stylebox_override("focus", resalte)
 	b.add_theme_stylebox_override("pressed", resalte)
+	b.focus_entered.connect(func() -> void: Audio.reproducir("seleccionar"))
+	b.pressed.connect(func() -> void: Audio.reproducir("confirmar"))
 	return b
 
 

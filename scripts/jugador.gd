@@ -9,6 +9,7 @@ var puede_moverse: bool = true
 func _ready() -> void:
 	super._ready()
 	HUD.bloqueo_cambio.connect(_al_cambiar_bloqueo)
+	animacion.frame_changed.connect(_al_cambiar_cuadro)
 	var reaparicion: Variant = GameState.tomar_posicion_pendiente()
 	if reaparicion != null:
 		global_position = reaparicion
@@ -23,6 +24,12 @@ func _physics_process(_delta: float) -> void:
 
 func _al_cambiar_bloqueo(bloqueado: bool) -> void:
 	puede_moverse = not bloqueado
+
+
+## Un paso en los cuadros 0 y 2 de la animación de caminar.
+func _al_cambiar_cuadro() -> void:
+	if animacion.animation.begins_with("walk_") and animacion.frame % 2 == 0:
+		Audio.reproducir("paso", -4.0, randf_range(0.85, 1.15))
 
 
 ## Lee las acciones de movimiento y regresa una sola dirección (sin diagonales).
