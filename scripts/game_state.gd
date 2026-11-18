@@ -77,6 +77,8 @@ var etapa_prologo: int = Etapa.TARDE:
 ## NPCs con los que ya se habló, para dar los +50 puntos solo la primera vez.
 var _npcs_hablados: Array[String] = []
 var _punto_control: Dictionary = {}
+## Posición donde debe aparecer el jugador después de cargar un punto de control.
+var _posicion_pendiente: Variant = null
 
 
 ## Suma (o resta, con un número negativo) puntos al puntaje. El puntaje nunca baja de 0.
@@ -169,8 +171,18 @@ func cargar_punto_control() -> Vector2:
 	ayudo_a_chente = p["ayudo_a_chente"]
 	etapa_prologo = p["etapa_prologo"]
 	_npcs_hablados.assign(p["npcs_hablados"])
+	if p["posicion"] != Vector2.ZERO:
+		_posicion_pendiente = p["posicion"]
 	punto_control_cargado.emit(p["posicion"])
 	return p["posicion"]
+
+
+## Regresa la posición de reaparición pendiente (o null) y la borra.
+## La usa el jugador al aparecer después de "Reintentar".
+func tomar_posicion_pendiente() -> Variant:
+	var posicion: Variant = _posicion_pendiente
+	_posicion_pendiente = null
+	return posicion
 
 
 ## Deja todo como al empezar una partida nueva y borra el punto de control.
@@ -184,3 +196,4 @@ func reiniciar() -> void:
 	etapa_prologo = Etapa.TARDE
 	_npcs_hablados.clear()
 	_punto_control.clear()
+	_posicion_pendiente = null

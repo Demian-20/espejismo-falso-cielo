@@ -9,6 +9,9 @@ var puede_moverse: bool = true
 func _ready() -> void:
 	super._ready()
 	HUD.bloqueo_cambio.connect(_al_cambiar_bloqueo)
+	var reaparicion: Variant = GameState.tomar_posicion_pendiente()
+	if reaparicion != null:
+		global_position = reaparicion
 
 
 func _physics_process(_delta: float) -> void:
