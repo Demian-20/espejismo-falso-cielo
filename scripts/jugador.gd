@@ -6,11 +6,20 @@ extends Personaje
 var puede_moverse: bool = true
 
 
+func _ready() -> void:
+	super._ready()
+	HUD.bloqueo_cambio.connect(_al_cambiar_bloqueo)
+
+
 func _physics_process(_delta: float) -> void:
 	var direccion: Vector2 = Vector2.ZERO
 	if puede_moverse:
 		direccion = _obtener_direccion_input()
 	mover(direccion)
+
+
+func _al_cambiar_bloqueo(bloqueado: bool) -> void:
+	puede_moverse = not bloqueado
 
 
 ## Lee las acciones de movimiento y regresa una sola dirección (sin diagonales).
