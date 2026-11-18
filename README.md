@@ -48,6 +48,11 @@ La versión web jugable se publicará en GitHub Pages al cierre de cada entrega.
 - **Commits:** siguen el formato [Conventional Commits](https://www.conventionalcommits.org/es/) y mencionan el issue, por ejemplo: `feat(ui): caja de diálogo con opciones (#3)`.
 - **Pull Requests:**
   - Cada rama se integra a `dev` con un PR que incluye una descripción, una captura o GIF y la línea `Closes #n`.
-  - El PR necesita la aprobación de otro integrante.
+  - Filiberto revisa los PR y deja un comentario si algo no cuadra con el GDD o el plan.
 - **Escenas de Godot:** cada integrante trabaja en sus propias escenas (`.tscn`) y scripts para evitar conflictos.
 - **Entregas:** al cierre de cada entrega, `dev` se fusiona en `main`, se marca una versión (`v0.1`, `v0.2`, …) y se publica en GitHub Pages.
+
+## Créditos de recursos
+
+- **Sprites de personajes (64×64):** derivados del sprite base "Evelyn" que está en `assets/evelyn/`. Fuente y licencia del sprite base por confirmar.
+- **Diseños de personajes y retratos:** diseños de referencia de Demian Leonardo Soto, creados con herramientas de IA. Los retratos de `assets/retratos/` se recortaron de esos diseños y se pasaron a pixel art.
