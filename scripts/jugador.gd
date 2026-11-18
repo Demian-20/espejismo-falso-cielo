@@ -1,51 +1,24 @@
 class_name Jugador
-extends CharacterBody2D
+extends Personaje
+## Mateo: lee las acciones del Input Map y se mueve en 4 direcciones.
 
-# Atributos de la clase (POO)
-@export var velocidad: float = 160.0
-var ultima_direccion: String = "abajo"
+## En false el jugador no se mueve (por ejemplo, mientras hay un diálogo abierto).
+var puede_moverse: bool = true
 
-# Referencia al nodo hijo AnimatedSprite2D
-@onready var animacion: AnimatedSprite2D = $AnimatedSprite2D
 
 func _physics_process(_delta: float) -> void:
-	var direccion: Vector2 = _obtener_direccion_input()
-	velocity = direccion * velocidad
-	move_and_slide()
-	_actualizar_animacion(direccion)
+	var direccion: Vector2 = Vector2.ZERO
+	if puede_moverse:
+		direccion = _obtener_direccion_input()
+	mover(direccion)
 
-# Método privado para leer las teclas (4 direcciones)
+
+## Lee las acciones de movimiento y regresa una sola dirección (sin diagonales).
 func _obtener_direccion_input() -> Vector2:
-	var dir_x: float = Input.get_axis("ui_left", "ui_right")
-	var dir_y: float = Input.get_axis("ui_up", "ui_down")
-	
-	# Soporte adicional para teclas W, A, S, D
-	if Input.is_key_pressed(KEY_A): dir_x = -1.0
-	if Input.is_key_pressed(KEY_D): dir_x = 1.0
-	if Input.is_key_pressed(KEY_W): dir_y = -1.0
-	if Input.is_key_pressed(KEY_S): dir_y = 1.0
-	
-	if dir_x != 0:
-		return Vector2(dir_x, 0)
-	elif dir_y != 0:
-		return Vector2(0, dir_y)
+	var dir_x: float = Input.get_axis("mover_izquierda", "mover_derecha")
+	var dir_y: float = Input.get_axis("mover_arriba", "mover_abajo")
+	if dir_x != 0.0:
+		return Vector2(signf(dir_x), 0.0)
+	if dir_y != 0.0:
+		return Vector2(0.0, signf(dir_y))
 	return Vector2.ZERO
-
-# Método privado para controlar las animaciones y el espejeo (flip_h)
-func _actualizar_animacion(direccion: Vector2) -> void:
-	if direccion != Vector2.ZERO:
-		if direccion.x > 0:
-			ultima_direccion = "lado"
-			animacion.flip_h = false
-		elif direccion.x < 0:
-			ultima_direccion = "lado"
-			animacion.flip_h = true
-		elif direccion.y < 0:
-			ultima_direccion = "arriba"
-			animacion.flip_h = false
-		elif direccion.y > 0:
-			ultima_direccion = "abajo"
-			animacion.flip_h = false
-		animacion.play("walk_" + ultima_direccion)
-	else:
-		animacion.play("idle_" + ultima_direccion)
