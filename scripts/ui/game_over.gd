@@ -3,8 +3,10 @@ extends CanvasLayer
 ## Pantalla de Game Over: aparece con la señal `game_over` de GameState, muestra el
 ## puntaje final y las evidencias, y permite reintentar desde el último punto de control.
 
-## Se emite al presionar Reintentar, antes de recargar el nivel.
+## Se emite al presionar Reintentar; el HUD regresa al punto de control y recarga el nivel.
 signal reintentar_presionado
+## Se emite al presionar Salir.
+signal salir_presionado
 
 ## Segundos de espera antes de mostrarse, para que se alcance a ver la animación de muerte.
 const RETRASO := 1.2
@@ -85,18 +87,14 @@ func _al_game_over() -> void:
 	mostrar()
 
 
-## Regresa al último punto de control (o reinicia la partida si no hay) y recarga el nivel.
 func _al_reintentar() -> void:
 	visible = false
 	mensaje = MENSAJE_POR_DEFECTO
 	reintentar_presionado.emit()
-	get_tree().paused = false
-	GameState.cargar_punto_control()
-	get_tree().reload_current_scene()
 
 
 func _al_salir() -> void:
-	get_tree().quit()
+	salir_presionado.emit()
 
 
 func _etiqueta_centrada(tamano: int, color: Color) -> Label:
