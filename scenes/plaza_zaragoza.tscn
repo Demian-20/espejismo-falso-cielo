@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://cnfhfqg7uxlie"]
+[gd_scene load_steps=8 format=3 uid="uid://cnfhfqg7uxlie"]
 
 [ext_resource type="Texture2D" uid="uid://ewh25ywflytp" path="res://assets/plaza_zaragoza.jpg" id="1_sgq4k"]
 [ext_resource type="PackedScene" uid="uid://capg043u75iy1" path="res://scenes/jugador.tscn" id="2_k02xx"]
@@ -6,9 +6,11 @@
 [ext_resource type="PackedScene" path="res://scenes/nivel/objetos.tscn" id="4_objet"]
 [ext_resource type="PackedScene" path="res://scenes/nivel/npcs.tscn" id="5_npcs"]
 [ext_resource type="PackedScene" path="res://scenes/nivel/callejon.tscn" id="6_calle"]
+[ext_resource type="Script" path="res://scripts/nivel/plaza.gd" id="7_plaza"]
 
 [node name="PlazaZaragoza" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("7_plaza")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 z_index = -1
