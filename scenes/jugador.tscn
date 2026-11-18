@@ -1,6 +1,7 @@
-[gd_scene load_steps=28 format=3 uid="uid://capg043u75iy1"]
+[gd_scene load_steps=29 format=3 uid="uid://capg043u75iy1"]
 
 [ext_resource type="Script" path="res://scripts/jugador.gd" id="1_brhi3"]
+[ext_resource type="Script" path="res://scripts/acciones_jugador.gd" id="8_accio"]
 [ext_resource type="Texture2D" uid="uid://dj6by4q0pqkj8" path="res://assets/evelyn/idle.png" id="1_e7nht"]
 [ext_resource type="Texture2D" uid="uid://kxlfdrv8jit8" path="res://assets/evelyn/idle 3.png" id="2_jgoxj"]
 [ext_resource type="Texture2D" uid="uid://lyg3i3w374o7" path="res://assets/evelyn/idle 2.png" id="3_7aoyo"]
@@ -10,75 +11,75 @@
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ucn6w"]
 atlas = ExtResource("1_e7nht")
-region = Rect2(0, 0, 1216, 1216)
+region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mbjjs"]
 atlas = ExtResource("1_e7nht")
-region = Rect2(1216, 0, 1216, 1216)
+region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8n121"]
 atlas = ExtResource("2_jgoxj")
-region = Rect2(0, 0, 1216, 1216)
+region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h0xce"]
 atlas = ExtResource("2_jgoxj")
-region = Rect2(1216, 0, 1216, 1216)
+region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hqr05"]
 atlas = ExtResource("3_7aoyo")
-region = Rect2(0, 0, 1216, 1216)
+region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_d0nwi"]
 atlas = ExtResource("3_7aoyo")
-region = Rect2(1216, 0, 1216, 1216)
+region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_h270l"]
 atlas = ExtResource("5_cjixy")
-region = Rect2(0, 0, 1216, 1216)
+region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6pvd6"]
 atlas = ExtResource("5_cjixy")
-region = Rect2(1216, 0, 1216, 1216)
+region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_8jsqf"]
 atlas = ExtResource("5_cjixy")
-region = Rect2(2432, 0, 1216, 1216)
+region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7lm2v"]
 atlas = ExtResource("5_cjixy")
-region = Rect2(3648, 0, 1216, 1216)
+region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_rvfvk"]
 atlas = ExtResource("6_1gcnn")
-region = Rect2(0, 0, 1216, 1216)
+region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vct63"]
 atlas = ExtResource("6_1gcnn")
-region = Rect2(1216, 0, 1216, 1216)
+region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_7axgd"]
 atlas = ExtResource("6_1gcnn")
-region = Rect2(2432, 0, 1216, 1216)
+region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_c2gux"]
 atlas = ExtResource("6_1gcnn")
-region = Rect2(3648, 0, 1216, 1216)
+region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_cvyot"]
 atlas = ExtResource("7_kb0fl")
-region = Rect2(0, 0, 1216, 1216)
+region = Rect2(0, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_goufj"]
 atlas = ExtResource("7_kb0fl")
-region = Rect2(1216, 0, 1216, 1216)
+region = Rect2(64, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1cxh1"]
 atlas = ExtResource("7_kb0fl")
-region = Rect2(2432, 0, 1216, 1216)
+region = Rect2(128, 0, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_k6jon"]
 atlas = ExtResource("7_kb0fl")
-region = Rect2(3648, 0, 1216, 1216)
+region = Rect2(192, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_lktlc"]
 animations = [{
@@ -168,19 +169,24 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_owny0"]
-size = Vector2(15, 12)
+size = Vector2(14, 6)
 
 [node name="Jugador" type="CharacterBody2D"]
-scale = Vector2(0.08, 0.08)
 script = ExtResource("1_brhi3")
+nombre_mostrado = "Mateo"
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
 sprite_frames = SubResource("SpriteFrames_lktlc")
-animation = &"idle_arriba"
+animation = &"idle_abajo"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2.5, -4)
+position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_owny0")
+
+[node name="Acciones" type="Node" parent="."]
+script = ExtResource("8_accio")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(2.5, 2.5)
