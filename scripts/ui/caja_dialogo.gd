@@ -29,6 +29,7 @@ var _letras: float = 0.0
 var _escribiendo: bool = false
 var _opciones_pendientes: Array = []
 var _pausa: float = 0.0
+var _cancelado: bool = false
 
 
 func _ready() -> void:
@@ -87,20 +88,37 @@ func _ready() -> void:
 
 ## Muestra las líneas una por una y termina cuando el jugador lee la última.
 func reproducir(lineas: Array) -> void:
+	_cancelado = false
 	visible = true
 	for linea in lineas:
 		_mostrar_linea(linea, [])
 		await _linea_leida
+		if _cancelado:
+			break
 	visible = false
 
 
-## Muestra una línea con opciones y regresa el índice de la opción elegida.
+## Muestra una línea con opciones y regresa el índice de la opción elegida
+## (o -1 si el diálogo se cancela, por ejemplo por un Game Over).
 func preguntar(linea: Dictionary, opciones: Array) -> int:
+	_cancelado = false
 	visible = true
 	_mostrar_linea(linea, opciones)
 	var indice: int = await opcion_elegida
 	visible = false
 	return indice
+
+
+## Cierra el diálogo que esté abierto y termina sus await pendientes.
+func cancelar() -> void:
+	if not visible:
+		return
+	_cancelado = true
+	_opciones_pendientes = []
+	_limpiar_opciones()
+	visible = false
+	_linea_leida.emit()
+	opcion_elegida.emit(-1)
 
 
 ## true mientras el texto se sigue escribiendo.

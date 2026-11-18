@@ -15,6 +15,7 @@ signal dialogo_terminado
 var caja: CajaDialogo
 var marcador: Marcador
 var inventario: PanelInventario
+var game_over: PantallaGameOver
 var _aviso: PanelContainer
 var _texto_aviso: Label
 var _tension: VBoxContainer
@@ -32,6 +33,9 @@ func _ready() -> void:
 	add_child(caja)
 	_crear_aviso()
 	_crear_tension()
+	game_over = preload("res://scenes/ui/game_over.tscn").instantiate()
+	game_over.reintentar_presionado.connect(reiniciar_interfaz)
+	add_child(game_over)
 
 
 ## Arma una línea de diálogo. `retrato` puede ser una Texture2D o la ruta de la imagen.
@@ -48,7 +52,8 @@ func dialogo(lineas: Array) -> void:
 	_bloquear(false)
 
 
-## Muestra una línea con opciones. Usar con await: regresa el índice de la opción elegida.
+## Muestra una línea con opciones. Usar con await: regresa el índice de la opción elegida
+## (o -1 si se canceló por un Game Over).
 func preguntar(linea_pregunta: Dictionary, opciones: Array) -> int:
 	_bloquear(true)
 	dialogo_iniciado.emit()
@@ -82,13 +87,25 @@ func ocultar_tension() -> void:
 	_tension.visible = false
 
 
+## Cierra el diálogo, el inventario, el aviso y la barra de tensión, y desbloquea al jugador.
+## Se llama sola al presionar Reintentar en el Game Over.
+func reiniciar_interfaz() -> void:
+	caja.cancelar()
+	inventario.cerrar()
+	ocultar_aviso()
+	ocultar_tension()
+	if _bloqueos > 0:
+		_bloqueos = 0
+		bloqueo_cambio.emit(false)
+
+
 ## Oculta o muestra el marcador (por ejemplo, en las pantallas de apertura).
 func mostrar_marcador(mostrar: bool) -> void:
 	marcador.visible = mostrar
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("inventario") and not caja.visible:
+	if event.is_action_pressed("inventario") and not caja.visible and not game_over.visible:
 		get_viewport().set_input_as_handled()
 		if inventario.visible:
 			inventario.cerrar()
