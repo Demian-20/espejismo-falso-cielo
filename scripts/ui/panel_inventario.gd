@@ -47,6 +47,7 @@ func _ready() -> void:
 func abrir() -> void:
 	_actualizar()
 	visible = true
+	Audio.reproducir("seleccionar")
 	if _lista.item_count > 0:
 		_lista.select(0)
 		_al_seleccionar(0)
@@ -72,5 +73,7 @@ func _actualizar() -> void:
 
 
 func _al_seleccionar(indice: int) -> void:
+	if visible:
+		Audio.reproducir("seleccionar")
 	var nombre := _lista.get_item_text(indice)
 	_descripcion.text = DESCRIPCIONES.get(nombre, "Sin descripción.")

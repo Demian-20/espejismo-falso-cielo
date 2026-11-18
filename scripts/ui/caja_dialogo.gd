@@ -153,7 +153,11 @@ func _process(delta: float) -> void:
 	_pausa = maxf(_pausa - delta, 0.0)
 	if _escribiendo:
 		_letras += VELOCIDAD_LETRAS * delta
-		_texto.visible_characters = int(_letras)
+		var visibles := int(_letras)
+		if visibles != _texto.visible_characters:
+			_texto.visible_characters = visibles
+			if visibles % 2 == 0:
+				Audio.reproducir("letra", 0.0, randf_range(0.95, 1.05))
 		if _texto.visible_characters >= _texto.get_total_character_count():
 			_terminar_escritura()
 
