@@ -1,6 +1,6 @@
 extends CanvasLayer
 ## Interfaz del juego (autoload "HUD"): caja de diálogo, marcador, inventario,
-## aviso de interacción e indicador de tensión.
+## aviso de interacción, indicador de tensión, menú de pausa y Game Over.
 ##
 ## Ejemplos desde otros scripts:
 ##   await HUD.dialogo([HUD.linea("Doña Carmen", "Buenas tardes, joven.", "res://assets/retratos/dona_carmen.png")])
@@ -15,6 +15,8 @@ signal dialogo_terminado
 var caja: CajaDialogo
 var marcador: Marcador
 var inventario: PanelInventario
+var game_over: PantallaGameOver
+var menu_pausa: MenuPausa
 var _aviso: PanelContainer
 var _texto_aviso: Label
 var _tension: VBoxContainer
@@ -32,6 +34,15 @@ func _ready() -> void:
 	add_child(caja)
 	_crear_aviso()
 	_crear_tension()
+	menu_pausa = preload("res://scenes/ui/menu_pausa.tscn").instantiate()
+	menu_pausa.continuar_presionado.connect(continuar)
+	menu_pausa.reintentar_presionado.connect(reintentar)
+	menu_pausa.salir_presionado.connect(salir)
+	add_child(menu_pausa)
+	game_over = preload("res://scenes/ui/game_over.tscn").instantiate()
+	game_over.reintentar_presionado.connect(reintentar)
+	game_over.salir_presionado.connect(salir)
+	add_child(game_over)
 
 
 ## Arma una línea de diálogo. `retrato` puede ser una Texture2D o la ruta de la imagen.
@@ -48,7 +59,8 @@ func dialogo(lineas: Array) -> void:
 	_bloquear(false)
 
 
-## Muestra una línea con opciones. Usar con await: regresa el índice de la opción elegida.
+## Muestra una línea con opciones. Usar con await: regresa el índice de la opción elegida
+## (o -1 si se canceló por un Game Over).
 func preguntar(linea_pregunta: Dictionary, opciones: Array) -> int:
 	_bloquear(true)
 	dialogo_iniciado.emit()
@@ -82,24 +94,83 @@ func ocultar_tension() -> void:
 	_tension.visible = false
 
 
+## Pausa el juego y abre el menú de pausa. No hace nada durante un diálogo o el Game Over.
+func pausar() -> void:
+	if caja.visible or game_over.visible or menu_pausa.visible:
+		return
+	if inventario.visible:
+		inventario.cerrar()
+		_bloquear(false)
+	menu_pausa.mostrar()
+	get_tree().paused = true
+
+
+## Cierra el menú de pausa y sigue el juego.
+func continuar() -> void:
+	menu_pausa.ocultar()
+	get_tree().paused = false
+
+
+## Regresa al último punto de control (o reinicia la partida si no hay) y recarga el nivel.
+## La usan el menú de pausa y el Game Over.
+func reintentar() -> void:
+	menu_pausa.ocultar()
+	game_over.visible = false
+	reiniciar_interfaz()
+	get_tree().paused = false
+	GameState.cargar_punto_control()
+	get_tree().reload_current_scene()
+
+
+func salir() -> void:
+	get_tree().quit()
+
+
+func esta_en_pausa() -> bool:
+	return menu_pausa.visible
+
+
+## Cierra el diálogo, el inventario, el aviso y la barra de tensión, y desbloquea al jugador.
+## Se llama sola al reintentar.
+func reiniciar_interfaz() -> void:
+	caja.cancelar()
+	inventario.cerrar()
+	ocultar_aviso()
+	ocultar_tension()
+	if _bloqueos > 0:
+		_bloqueos = 0
+		bloqueo_cambio.emit(false)
+
+
 ## Oculta o muestra el marcador (por ejemplo, en las pantallas de apertura).
 func mostrar_marcador(mostrar: bool) -> void:
 	marcador.visible = mostrar
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("inventario") and not caja.visible:
-		get_viewport().set_input_as_handled()
-		if inventario.visible:
+	if game_over.visible:
+		return
+	var tecla_pausa := event.is_action_pressed("pausa") or event.is_action_pressed("ui_cancel")
+	if menu_pausa.visible:
+		if tecla_pausa:
+			get_viewport().set_input_as_handled()
+			continuar()
+		return
+	if inventario.visible:
+		if tecla_pausa or event.is_action_pressed("inventario"):
+			get_viewport().set_input_as_handled()
 			inventario.cerrar()
 			_bloquear(false)
-		else:
-			inventario.abrir()
-			_bloquear(true)
-	elif event.is_action_pressed("ui_cancel") and inventario.visible:
+		return
+	if caja.visible:
+		return
+	if event.is_action_pressed("inventario"):
 		get_viewport().set_input_as_handled()
-		inventario.cerrar()
-		_bloquear(false)
+		inventario.abrir()
+		_bloquear(true)
+	elif event.is_action_pressed("pausa"):
+		get_viewport().set_input_as_handled()
+		pausar()
 
 
 func _bloquear(activar: bool) -> void:
