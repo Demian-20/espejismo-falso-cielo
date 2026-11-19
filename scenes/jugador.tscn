@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=3 uid="uid://capg043u75iy1"]
+
+[ext_resource type="Script" path="res://scripts/jugador.gd" id="1_brhi3"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/mateo/mateo.tres" id="2_mateo"]
+[ext_resource type="Script" path="res://scripts/acciones_jugador.gd" id="8_accio"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_owny0"]
+size = Vector2(14, 6)
+
+[node name="Jugador" type="CharacterBody2D"]
+script = ExtResource("1_brhi3")
+nombre_mostrado = "Mateo"
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("2_mateo")
+animation = &"idle_abajo"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_owny0")
+
+[node name="Acciones" type="Node" parent="."]
+script = ExtResource("8_accio")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2.5, 2.5)
