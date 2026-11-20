@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dlgp2ah2gwsyp"]
 
 [node name="Callejon" type="Node2D"]
 y_sort_enabled = true

@@ -46,27 +46,33 @@ func _ready() -> void:
 
 
 ## Arma una línea de diálogo. `retrato` puede ser una Texture2D o la ruta de la imagen.
-func linea(nombre: String, texto: String, retrato: Variant = null) -> Dictionary:
-	return {"nombre": nombre, "texto": texto, "retrato": retrato}
+func linea(nombre: String, texto: String, retrato: Variant = null, tono: float = 1.0) -> Dictionary:
+	return {"nombre": nombre, "texto": texto, "retrato": retrato, "tono": tono}
 
 
 ## Muestra varias líneas seguidas. Usar con await: termina cuando el jugador lee la última.
 func dialogo(lineas: Array) -> void:
+	var marcador_estaba_visible := marcador.visible
+	marcador.visible = false
 	_bloquear(true)
 	dialogo_iniciado.emit()
 	await caja.reproducir(lineas)
 	dialogo_terminado.emit()
 	_bloquear(false)
+	marcador.visible = marcador_estaba_visible
 
 
 ## Muestra una línea con opciones. Usar con await: regresa el índice de la opción elegida
 ## (o -1 si se canceló por un Game Over).
 func preguntar(linea_pregunta: Dictionary, opciones: Array) -> int:
+	var marcador_estaba_visible := marcador.visible
+	marcador.visible = false
 	_bloquear(true)
 	dialogo_iniciado.emit()
 	var indice: int = await caja.preguntar(linea_pregunta, opciones)
 	dialogo_terminado.emit()
 	_bloquear(false)
+	marcador.visible = marcador_estaba_visible
 	return indice
 
 

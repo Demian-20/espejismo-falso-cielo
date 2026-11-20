@@ -2,10 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://ewh25ywflytp" path="res://assets/plaza_zaragoza.jpg" id="1_sgq4k"]
 [ext_resource type="PackedScene" uid="uid://capg043u75iy1" path="res://scenes/jugador.tscn" id="2_k02xx"]
-[ext_resource type="PackedScene" path="res://scenes/nivel/colisiones.tscn" id="3_colis"]
+[ext_resource type="PackedScene" uid="uid://cth66j3nsqmvo" path="res://scenes/nivel/colisiones.tscn" id="3_colis"]
 [ext_resource type="PackedScene" path="res://scenes/nivel/objetos.tscn" id="4_objet"]
 [ext_resource type="PackedScene" path="res://scenes/nivel/npcs.tscn" id="5_npcs"]
-[ext_resource type="PackedScene" path="res://scenes/nivel/callejon.tscn" id="6_calle"]
+[ext_resource type="PackedScene" uid="uid://dlgp2ah2gwsyp" path="res://scenes/nivel/callejon.tscn" id="6_calle"]
 [ext_resource type="Script" path="res://scripts/nivel/plaza.gd" id="7_plaza"]
 
 [node name="PlazaZaragoza" type="Node2D"]
@@ -18,6 +18,7 @@ texture = ExtResource("1_sgq4k")
 centered = false
 
 [node name="Colisiones" parent="." instance=ExtResource("3_colis")]
+visible = false
 
 [node name="Objetos" parent="." instance=ExtResource("4_objet")]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=3 uid="uid://cth66j3nsqmvo"]
+[gd_scene load_steps=27 format=3 uid="uid://cth66j3nsqmvo"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_atg7p"]
 size = Vector2(69, 1518)
@@ -65,8 +65,11 @@ size = Vector2(263.5, 168)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_bfmj2"]
 size = Vector2(248, 125.5)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g58ns"]
+size = Vector2(248, 125.5)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_k7rc8"]
-size = Vector2(251, 125.5)
+size = Vector2(148.5, 74.875)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_15bnj"]
 size = Vector2(55.75, 74.75)
@@ -152,13 +155,11 @@ shape = SubResource("RectangleShape2D_wdl6a")
 [node name="CollisionShape2D17" type="CollisionShape2D" parent="Paredes"]
 position = Vector2(1417.02, 794.964)
 rotation = -0.00174533
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_v06qb")
 
 [node name="CollisionShape2D18" type="CollisionShape2D" parent="Paredes"]
 position = Vector2(1718.5, 65.429)
 rotation = -0.00174533
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_wfytp")
 
 [node name="CollisionShape2D19" type="CollisionShape2D" parent="Paredes"]
@@ -231,8 +232,12 @@ shape = SubResource("RectangleShape2D_qauib")
 position = Vector2(1209, 209.75)
 shape = SubResource("RectangleShape2D_bfmj2")
 
+[node name="CollisionShape2D31" type="CollisionShape2D" parent="Paredes"]
+position = Vector2(1613, 141)
+shape = SubResource("RectangleShape2D_g58ns")
+
 [node name="CollisionShape2D23" type="CollisionShape2D" parent="Paredes"]
-position = Vector2(1640.5, 195)
+position = Vector2(1399, 51)
 shape = SubResource("RectangleShape2D_k7rc8")
 
 [node name="CollisionShape2D24" type="CollisionShape2D" parent="Paredes"]
