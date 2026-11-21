@@ -15,7 +15,7 @@ nombre_mostrado = "Mateo"
 position = Vector2(0, -18)
 scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("2_mateo")
-animation = &"idle_abajo"
+animation = &"idle_lado"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, -3)
