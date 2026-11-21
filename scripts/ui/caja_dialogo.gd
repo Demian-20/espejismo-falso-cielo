@@ -213,6 +213,22 @@ func _limpiar_opciones() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not visible:
 		return
+	if _opciones.get_child_count() > 0:
+		var total := _opciones.get_child_count()
+		var actual := -1
+		for i in total:
+			if _opciones.get_child(i).has_focus():
+				actual = i
+				break
+		if event is InputEventKey and event.pressed and not event.echo:
+			if event.keycode == KEY_S or event.keycode == KEY_DOWN:
+				get_viewport().set_input_as_handled()
+				(_opciones.get_child((actual + 1) % total) as Control).grab_focus()
+				return
+			elif event.keycode == KEY_W or event.keycode == KEY_UP:
+				get_viewport().set_input_as_handled()
+				(_opciones.get_child((actual - 1 + total) % total) as Control).grab_focus()
+				return
 	if event.is_action_pressed("interactuar") or event.is_action_pressed("ui_accept"):
 		get_viewport().set_input_as_handled()
 		_avanzar()

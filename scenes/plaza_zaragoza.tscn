@@ -1,12 +1,18 @@
-[gd_scene load_steps=8 format=3 uid="uid://cnfhfqg7uxlie"]
+[gd_scene load_steps=12 format=3 uid="uid://cnfhfqg7uxlie"]
 
 [ext_resource type="Texture2D" uid="uid://ewh25ywflytp" path="res://assets/plaza_zaragoza.jpg" id="1_sgq4k"]
 [ext_resource type="PackedScene" uid="uid://capg043u75iy1" path="res://scenes/jugador.tscn" id="2_k02xx"]
 [ext_resource type="PackedScene" uid="uid://cth66j3nsqmvo" path="res://scenes/nivel/colisiones.tscn" id="3_colis"]
 [ext_resource type="PackedScene" path="res://scenes/nivel/objetos.tscn" id="4_objet"]
 [ext_resource type="PackedScene" path="res://scenes/nivel/npcs.tscn" id="5_npcs"]
+[ext_resource type="PackedScene" uid="uid://bs4kcg2cwhwky" path="res://scenes/npc.tscn" id="6_15mov"]
 [ext_resource type="PackedScene" uid="uid://dlgp2ah2gwsyp" path="res://scenes/nivel/callejon.tscn" id="6_calle"]
 [ext_resource type="Script" path="res://scripts/nivel/plaza.gd" id="7_plaza"]
+[ext_resource type="Script" path="res://scripts/don_chente.gd" id="7_yvigb"]
+[ext_resource type="SpriteFrames" uid="uid://cqf0h7cxawekp" path="res://assets/personajes/don_chente/don_chente.tres" id="8_y5gbm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_twa45"]
+size = Vector2(18.25, 32.5)
 
 [node name="PlazaZaragoza" type="Node2D"]
 y_sort_enabled = true
@@ -24,7 +30,24 @@ visible = false
 
 [node name="Npcs" parent="." instance=ExtResource("5_npcs")]
 
+[node name="DonChente" parent="Npcs" instance=ExtResource("6_15mov")]
+script = ExtResource("7_yvigb")
+
+[node name="AnimatedSprite2D" parent="Npcs/DonChente" index="0"]
+position = Vector2(1952, 594)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("8_y5gbm")
+animation = &"idle_lado"
+frame_progress = 0.106491
+
+[node name="CollisionShape2D" parent="Npcs/DonChente" index="1"]
+position = Vector2(1961, 597)
+shape = SubResource("RectangleShape2D_twa45")
+
 [node name="Callejon" parent="." instance=ExtResource("6_calle")]
+position = Vector2(-3, -9)
 
 [node name="Jugador" parent="." instance=ExtResource("2_k02xx")]
 position = Vector2(989, 694)
+
+[editable path="Npcs/DonChente"]
