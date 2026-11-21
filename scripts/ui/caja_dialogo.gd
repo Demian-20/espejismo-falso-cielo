@@ -14,22 +14,24 @@ const VELOCIDAD_LETRAS := 45.0
 ## Tiempo en que se ignoran las teclas al abrir una línea, para no saltarla con la misma tecla.
 const PAUSA_ENTRADA := 0.15
 ## Altura de la caja sin opciones y espacio extra por cada opción.
-const ALTO_CAJA := 194
+const ALTO_CAJA := 230
 const ALTO_OPCION := 48
 
 var _nombre: Label
 var _texto: RichTextLabel
 var _opciones: VBoxContainer
 var _continuar: Label
-var _panel_retrato: PanelContainer
+var _panel_retrato: VBoxContainer
 var _retrato: TextureRect
 var _nombre_retrato: Label
+var _aire_arriba: Control
 
 var _letras: float = 0.0
 var _escribiendo: bool = false
 var _opciones_pendientes: Array = []
 var _pausa: float = 0.0
 var _cancelado: bool = false
+var _tono_actual: float = 1.0
 
 
 func _ready() -> void:
@@ -39,51 +41,55 @@ func _ready() -> void:
 	offset_right = -24
 	offset_bottom = -20
 	offset_top = offset_bottom - ALTO_CAJA
-	var fila := HBoxContainer.new()
-	fila.set_anchors_preset(Control.PRESET_FULL_RECT)
-	fila.add_theme_constant_override("separation", 12)
-	add_child(fila)
 
 	var panel_texto := PanelContainer.new()
-	panel_texto.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel_texto.set_anchors_preset(Control.PRESET_FULL_RECT)
 	panel_texto.add_theme_stylebox_override("panel", EstiloUI.panel())
 	panel_texto.gui_input.connect(_al_clic)
-	fila.add_child(panel_texto)
+	add_child(panel_texto)
+
+	var fila := HBoxContainer.new()
+	fila.add_theme_constant_override("separation", 16)
+	panel_texto.add_child(fila)
+
+	_panel_retrato = VBoxContainer.new()
+	_panel_retrato.custom_minimum_size = Vector2(156, 0)
+	fila.add_child(_panel_retrato)
+	_retrato = TextureRect.new()
+	_retrato.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_retrato.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_retrato.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	_panel_retrato.add_child(_retrato)
+	_nombre_retrato = EstiloUI.etiqueta("", 19, EstiloUI.NOMBRE)
+	_nombre_retrato.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_panel_retrato.add_child(_nombre_retrato)
+
 	var columna := VBoxContainer.new()
+	columna.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columna.add_theme_constant_override("separation", 6)
-	panel_texto.add_child(columna)
-	_nombre = EstiloUI.etiqueta("", 22, EstiloUI.NOMBRE)
+	fila.add_child(columna)
+	_aire_arriba = Control.new()
+	_aire_arriba.custom_minimum_size = Vector2(0, 14)
+	columna.add_child(_aire_arriba)
+	_nombre = EstiloUI.etiqueta("", 24, EstiloUI.NOMBRE)
 	columna.add_child(_nombre)
 	_texto = RichTextLabel.new()
 	_texto.bbcode_enabled = true
 	_texto.scroll_active = false
 	_texto.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_texto.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_texto.add_theme_font_size_override("normal_font_size", 21)
+	_texto.add_theme_font_size_override("normal_font_size", 26)
+	_texto.add_theme_font_size_override("italics_font_size", 26)
+	_texto.add_theme_font_size_override("bold_font_size", 26)
 	_texto.add_theme_color_override("default_color", EstiloUI.TEXTO)
 	columna.add_child(_texto)
 	_opciones = VBoxContainer.new()
 	_opciones.add_theme_constant_override("separation", 4)
 	columna.add_child(_opciones)
-	_continuar = EstiloUI.etiqueta("[E] Continuar", 15, EstiloUI.TENUE)
+	_continuar = EstiloUI.etiqueta("[E] Continuar", 16, EstiloUI.TENUE)
 	_continuar.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	columna.add_child(_continuar)
-
-	_panel_retrato = PanelContainer.new()
-	_panel_retrato.custom_minimum_size = Vector2(178, 0)
-	_panel_retrato.add_theme_stylebox_override("panel", EstiloUI.panel(3, 8))
-	fila.add_child(_panel_retrato)
-	var columna_retrato := VBoxContainer.new()
-	_panel_retrato.add_child(columna_retrato)
-	_retrato = TextureRect.new()
-	_retrato.size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_retrato.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	_retrato.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	_retrato.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
-	columna_retrato.add_child(_retrato)
-	_nombre_retrato = EstiloUI.etiqueta("", 17, EstiloUI.NOMBRE)
-	_nombre_retrato.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	columna_retrato.add_child(_nombre_retrato)
 
 
 ## Muestra las líneas una por una y termina cuando el jugador lee la última.
@@ -92,6 +98,7 @@ func reproducir(lineas: Array) -> void:
 	visible = true
 	for linea in lineas:
 		_mostrar_linea(linea, [])
+		_aire_arriba.visible = _retrato.texture != null
 		await _linea_leida
 		if _cancelado:
 			break
@@ -129,12 +136,12 @@ func esta_escribiendo() -> bool:
 func _mostrar_linea(linea: Dictionary, opciones: Array) -> void:
 	var nombre: String = linea.get("nombre", "")
 	_nombre.text = nombre
-	_nombre.visible = nombre != ""
 	_texto.text = linea.get("texto", "")
 	_texto.visible_characters = 0
 	_letras = 0.0
 	_escribiendo = true
 	_pausa = PAUSA_ENTRADA
+	_tono_actual = float(linea.get("tono", 1.0))
 	_opciones_pendientes = opciones
 	_limpiar_opciones()
 	offset_top = offset_bottom - ALTO_CAJA - ALTO_OPCION * opciones.size()
@@ -145,6 +152,7 @@ func _mostrar_linea(linea: Dictionary, opciones: Array) -> void:
 	_retrato.texture = retrato if retrato is Texture2D else null
 	_nombre_retrato.text = nombre
 	_panel_retrato.visible = _retrato.texture != null
+	_nombre.visible = nombre != "" and _retrato.texture == null
 
 
 func _process(delta: float) -> void:
@@ -157,7 +165,7 @@ func _process(delta: float) -> void:
 		if visibles != _texto.visible_characters:
 			_texto.visible_characters = visibles
 			if visibles % 2 == 0:
-				Audio.reproducir("letra", 0.0, randf_range(0.95, 1.05))
+				Audio.reproducir("letra", 0.0, randf_range(_tono_actual - 0.05, _tono_actual + 0.05))
 		if _texto.visible_characters >= _texto.get_total_character_count():
 			_terminar_escritura()
 

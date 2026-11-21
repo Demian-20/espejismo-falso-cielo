@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://capg043u75iy1"]
 
 [ext_resource type="Script" path="res://scripts/jugador.gd" id="1_brhi3"]
-[ext_resource type="SpriteFrames" path="res://assets/personajes/mateo/mateo.tres" id="2_mateo"]
+[ext_resource type="SpriteFrames" uid="uid://ckx1i4tmcyudq" path="res://assets/personajes/mateo/mateo.tres" id="2_mateo"]
 [ext_resource type="Script" path="res://scripts/acciones_jugador.gd" id="8_accio"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_owny0"]
