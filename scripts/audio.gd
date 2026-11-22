@@ -55,6 +55,7 @@ func _ready() -> void:
 	GameState.vidas_cambio.connect(_al_cambiar_vidas)
 	GameState.dinero_cambio.connect(_al_cambiar_dinero)
 	GameState.game_over.connect(_al_game_over)
+	Configuracion.cargar()
 
 
 ## Reproduce un efecto de assets/audio/sfx/ por su nombre (sin ".wav").

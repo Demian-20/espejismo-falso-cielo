@@ -1,4 +1,130 @@
-[gd_scene format=3]
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="PackedScene" uid="uid://bs4kcg2cwhwky" path="res://scenes/npc.tscn" id="1_npc"]
+[ext_resource type="Script" path="res://scripts/npc_ambiental.gd" id="2_amb"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/cardenas/cardenas.tres" id="3_cardenas"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/vaquero/vaquero.tres" id="4_vaquero"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/vendedora/vendedora.tres" id="5_vendedora"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/joven_gorra/joven_gorra.tres" id="6_joven_gorra"]
+
+[ext_resource type="Script" path="res://scripts/dona_carmen.gd" id="7_carmen"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/dona_carmen/dona_carmen.tres" id="8_carmen"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_npc"]
+size = Vector2(14, 6)
 
 [node name="Npcs" type="Node2D"]
 y_sort_enabled = true
+
+[node name="Cardenas" parent="." instance=ExtResource("1_npc")]
+position = Vector2(2015, 250)
+script = ExtResource("2_amb")
+retrato = "res://assets/retratos/cardenas.png"
+lineas = PackedStringArray("Buenas tardes, joven. Ya no tarda en oscurecer; cuando se retire a su casa agarre por el bulevar principal y evite meterse por el callejón de atrás.", "Hoy nos reportaron gente sospechosa merodeando por esa cuadra.")
+voz = 0.8
+ruta = PackedVector2Array()
+pausa = 0.0
+id_npc = "cardenas"
+nombre_mostrado = "Oficial Cárdenas"
+velocidad_base = 55.0
+
+[node name="AnimatedSprite2D" parent="Cardenas" index="0"]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("3_cardenas")
+animation = &"idle_abajo"
+
+[node name="CollisionShape2D" parent="Cardenas" index="1"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="Vaquero" parent="." instance=ExtResource("1_npc")]
+position = Vector2(2025, 700)
+script = ExtResource("2_amb")
+retrato = "res://assets/retratos/vaquero.png"
+lineas = PackedStringArray("Antes uno podía quedarse platicando en las bancas hasta medianoche, mijo, pero hoy en día más vale recogerse temprano.")
+voz = 0.75
+ruta = PackedVector2Array(0, 0, 0, 650)
+pausa = 2.5
+id_npc = "vaquero"
+nombre_mostrado = "Señor vaquero"
+velocidad_base = 55.0
+
+[node name="AnimatedSprite2D" parent="Vaquero" index="0"]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("4_vaquero")
+animation = &"idle_abajo"
+
+[node name="CollisionShape2D" parent="Vaquero" index="1"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="Vendedora" parent="." instance=ExtResource("1_npc")]
+position = Vector2(850, 300)
+script = ExtResource("2_amb")
+retrato = "res://assets/retratos/vendedora.png"
+lineas = PackedStringArray("¿Unas coyotas, joven? Ándele, que ya voy levantando el puesto.", "Ya ni los de las nieves se quedan después de que oscurece.")
+voz = 1.2
+ruta = PackedVector2Array(0, 0, 0, 1050)
+pausa = 2.0
+id_npc = "vendedora"
+nombre_mostrado = "Vendedora"
+velocidad_base = 55.0
+
+[node name="AnimatedSprite2D" parent="Vendedora" index="0"]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("5_vendedora")
+animation = &"idle_abajo"
+
+[node name="CollisionShape2D" parent="Vendedora" index="1"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="JovenGorra" parent="." instance=ExtResource("1_npc")]
+position = Vector2(2240, 560)
+script = ExtResource("2_amb")
+retrato = "res://assets/retratos/joven_gorra.png"
+lineas = PackedStringArray("A esta hora todavía se siente el calorón en el pavimento, pero en cuanto baja el sol la plaza se vacía bien rápido.")
+voz = 1.1
+ruta = PackedVector2Array(0, 0, 0, 820)
+pausa = 1.5
+id_npc = "joven_gorra"
+nombre_mostrado = "Morro con gorra"
+velocidad_base = 55.0
+
+[node name="AnimatedSprite2D" parent="JovenGorra" index="0"]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("6_joven_gorra")
+animation = &"idle_abajo"
+
+[node name="CollisionShape2D" parent="JovenGorra" index="1"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_npc")
+
+[node name="DonaCarmen" parent="." instance=ExtResource("1_npc")]
+position = Vector2(1232, 772)
+script = ExtResource("7_carmen")
+retrato = "res://assets/retratos/dona_carmen.png"
+voz = 1.05
+id_npc = "dona_carmen"
+nombre_mostrado = "Doña Carmen"
+velocidad_base = 55.0
+
+[node name="AnimatedSprite2D" parent="DonaCarmen" index="0"]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("8_carmen")
+animation = &"idle_abajo"
+
+[node name="CollisionShape2D" parent="DonaCarmen" index="1"]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_npc")
+
+[editable path="Cardenas"]
+[editable path="Vaquero"]
+[editable path="Vendedora"]
+[editable path="JovenGorra"]
+[editable path="DonaCarmen"]

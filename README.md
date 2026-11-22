@@ -13,7 +13,7 @@ Profesor: M.C. Iván Rogelio Chenoweth Chenoweth.
 | **Público objetivo** | Jóvenes y adultos (15+) |
 | **Motor** | Godot Engine 4.3 o superior (GDScript) |
 | **Plataforma** | Web (exportación HTML5 publicada en GitHub Pages) |
-| **Estado** | En desarrollo: Actividad 1, propuesta y GDD |
+| **Estado** | Beta del prólogo (Actividad 2, `v0.2.0-beta`) |
 
 ## Equipo
 
@@ -23,10 +23,14 @@ Profesor: M.C. Iván Rogelio Chenoweth Chenoweth.
 | José Luis Germán Labandera | Programación base: escenas, jugador, IA de sigilo, guardado de estado y exportación web |
 | Filiberto Sañudo | UI/UX (diálogos, HUD, inventario, resultados), score, audio y QA |
 
+![Persecución en el callejón](docs/img/persecucion.jpg)
+
 ## Documentación
 
+- **[Manual de usuario](docs/manual-usuario.md):** controles, objetivo, puntaje, vidas, guardado y problemas comunes.
+- **[Reporte de pruebas de la beta](docs/reporte-pruebas-beta.md):** casos de prueba, resultados y bugs encontrados.
 - **GDD y documento técnico:** contiene el hardware y software, la historia, los personajes, el mapa del Nivel 1, el score y el plan de trabajo.
-- **Tablero del proyecto:** las tareas se organizan como tarjetas en GitHub Projects, a partir de los [issues del repositorio](https://github.com/Demian-20/espejismo-falso-cielo/issues).
+- **Tablero del proyecto:** las tareas se organizan como tarjetas en [GitHub Projects](https://github.com/users/Demian-20/projects/1/views/1), a partir de los [issues del repositorio](https://github.com/Demian-20/espejismo-falso-cielo/issues).
 
 ## Cómo ejecutar el proyecto
 
@@ -37,7 +41,17 @@ Profesor: M.C. Iván Rogelio Chenoweth Chenoweth.
    ```
 3. En Godot, elegir **Importar**, seleccionar el archivo `project.godot` y presionar **F5** para jugar.
 
-La versión web jugable se publicará en GitHub Pages al cierre de cada entrega.
+## Jugar en el navegador
+
+**[Jugar Espejismo: Falso Cielo](https://demian-20.github.io/espejismo-falso-cielo/)** (Chrome, Edge o Firefox de escritorio; también abre en celular, pero se juega con teclado).
+
+La versión web se exporta y publica sola con GitHub Actions (`.github/workflows/web.yml`):
+
+- En cada PR hacia `dev` o `main` se exporta el juego para comprobar que la build no se rompe. La build queda como artefacto descargable en la pestaña **Actions**.
+- En cada push a `main` (las entregas) se exporta y se publica en la rama `gh-pages`.
+- La exportación usa la plantilla web **sin hilos** (`thread_support=false`), porque GitHub Pages no manda los encabezados que necesita la versión con hilos y el juego se quedaría en pantalla negra.
+
+Para exportar a mano desde Godot: **Proyecto > Exportar > Web > Exportar proyecto**, con destino `build/web/index.html` (la carpeta `build/` no se sube al repositorio).
 
 ## Flujo de trabajo
 

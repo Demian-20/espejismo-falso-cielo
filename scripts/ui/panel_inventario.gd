@@ -4,6 +4,10 @@ extends PanelContainer
 
 ## Descripción de cada evidencia. Agreguen aquí las nuevas.
 const DESCRIPCIONES := {
+	"Obsidiana humeante": "Piedra negra y brillante que Don Chente le dio a Mateo a cambio de los $20. Parece que algo se mueve dentro de su reflejo.",
+	"Volante del callejón": "Volante arrancado de una banca: 'SE BUSCA'. La misma cara de la ficha de Doña Carmen, vista por última vez cerca del callejón de atrás.",
+	"Casquillo de bala": "Casquillo de 9 mm tirado junto a las obras, a la entrada del callejón. Todavía brilla; no lleva mucho ahí.",
+	"Nota arrugada": "Papel arrugado en la calle: 'Entrega 9:30. Callejón de la Catedral. Que nadie pase.'",
 	"Ficha de Búsqueda de Doña Carmen": "Volante con la foto del hijo de Doña Carmen, desaparecido en Hermosillo hace unos meses. Ella reparte estas fichas en la Plaza Zaragoza.",
 }
 

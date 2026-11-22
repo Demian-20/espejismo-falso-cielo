@@ -1,3 +1,9 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+
+# Builds locales de exportación (la web se publica desde GitHub Actions)
+build/
+
+# Temporales de Godot
+*.tmp
