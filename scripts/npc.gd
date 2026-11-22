@@ -1,11 +1,16 @@
 class_name NPC
 extends Personaje
 ## Clase base reutilizable para NPCs (Issue #10).
+##
+## Crea su zona Interactuable (issue #8): el detector del jugador muestra
+## "[E] Hablar con <nombre>" y al presionar E llama a interactuar(), que cada NPC sobrescribe.
+
+## Radio de la zona para hablar, medido desde el cuerpo del NPC.
+const RADIO_INTERACCION: float = 56.0
 
 @export var id_npc: String = ""
 
-var _jugador_cerca: bool = false
-var _interactuando: bool = false
+var zona_interaccion: Interactuable
 
 
 func _ready() -> void:
@@ -16,50 +21,23 @@ func _ready() -> void:
 
 
 func _crear_zona_interaccion() -> void:
-	var zona := Area2D.new()
-	zona.name = "ZonaInteraccion"
-	zona.position = animacion.position if animacion else Vector2.ZERO
-	zona.collision_layer = 0
-	zona.collision_mask = 0xFFFFFFFF
-	var forma := CollisionShape2D.new()
-	var circulo := CircleShape2D.new()
-	circulo.radius = 100.0
-	forma.shape = circulo
-	zona.add_child(forma)
-	add_child(zona)
-	zona.body_entered.connect(_al_entrar)
-	zona.body_exited.connect(_al_salir)
+	zona_interaccion = Interactuable.new()
+	zona_interaccion.name = "ZonaInteraccion"
+	zona_interaccion.radio = RADIO_INTERACCION
+	zona_interaccion.texto = "Hablar con " + (nombre_mostrado if nombre_mostrado != "" else "NPC")
+	zona_interaccion.position = _centro_del_cuerpo()
+	add_child(zona_interaccion)
 
 
-func _al_entrar(body: Node2D) -> void:
-	print("Zona NPC detectó a: ", body.name)
-	if body is Jugador or body.name == "Jugador":
-		_jugador_cerca = true
-		var etiqueta := nombre_mostrado if nombre_mostrado != "" else "NPC"
-		HUD.mostrar_aviso("[E] Hablar con " + etiqueta)
+## Centro del cuerpo del NPC. En algunas escenas el nodo se queda en (0, 0)
+## y el sprite y la colisión se mueven, así que se toma la posición de la colisión.
+func _centro_del_cuerpo() -> Vector2:
+	var forma := get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if forma != null:
+		return forma.position
+	return animacion.position if animacion else Vector2.ZERO
 
 
-func _al_salir(body: Node2D) -> void:
-	if body is Jugador or body.name == "Jugador":
-		_jugador_cerca = false
-		HUD.ocultar_aviso()
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if not _jugador_cerca or _interactuando:
-		return
-	if HUD.esta_en_dialogo() or HUD.esta_en_pausa():
-		return
-	if event.is_action_pressed("interactuar"):
-		get_viewport().set_input_as_handled()
-		_interactuando = true
-		HUD.ocultar_aviso()
-		await interactuar()
-		_interactuando = false
-		if _jugador_cerca:
-			var etiqueta := nombre_mostrado if nombre_mostrado != "" else "NPC"
-			HUD.mostrar_aviso("[E] Hablar con " + etiqueta)
-
-
+## La llama el jugador al presionar E. Cada NPC la sobrescribe con su diálogo.
 func interactuar() -> void:
 	pass
