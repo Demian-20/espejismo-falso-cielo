@@ -37,7 +37,17 @@ Profesor: M.C. Iván Rogelio Chenoweth Chenoweth.
    ```
 3. En Godot, elegir **Importar**, seleccionar el archivo `project.godot` y presionar **F5** para jugar.
 
-La versión web jugable se publicará en GitHub Pages al cierre de cada entrega.
+## Jugar en el navegador
+
+**[Jugar Espejismo: Falso Cielo](https://demian-20.github.io/espejismo-falso-cielo/)** (Chrome, Edge o Firefox de escritorio; también abre en celular, pero se juega con teclado).
+
+La versión web se exporta y publica sola con GitHub Actions (`.github/workflows/web.yml`):
+
+- En cada PR hacia `dev` o `main` se exporta el juego para comprobar que la build no se rompe. La build queda como artefacto descargable en la pestaña **Actions**.
+- En cada push a `main` (las entregas) se exporta y se publica en la rama `gh-pages`.
+- La exportación usa la plantilla web **sin hilos** (`thread_support=false`), porque GitHub Pages no manda los encabezados que necesita la versión con hilos y el juego se quedaría en pantalla negra.
+
+Para exportar a mano desde Godot: **Proyecto > Exportar > Web > Exportar proyecto**, con destino `build/web/index.html` (la carpeta `build/` no se sube al repositorio).
 
 ## Flujo de trabajo
 
