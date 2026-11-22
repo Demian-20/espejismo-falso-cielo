@@ -64,6 +64,10 @@ jobs:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
+      # La acción de publicar necesita el repositorio descargado para poder subir a gh-pages.
+      - name: Descargar el proyecto
+        uses: actions/checkout@v4
+
       - name: Descargar la build
         uses: actions/download-artifact@v4
         with:
