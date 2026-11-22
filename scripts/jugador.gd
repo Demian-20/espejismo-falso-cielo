@@ -22,6 +22,11 @@ func _physics_process(_delta: float) -> void:
 	mover(direccion)
 
 
+## Activa o desactiva el modo huida de la persecución: con Shift Mateo corre (issue #8).
+func activar_modo_huida(activo: bool) -> void:
+	($Acciones as AccionesJugador).activar_modo_huida(activo)
+
+
 func _al_cambiar_bloqueo(bloqueado: bool) -> void:
 	puede_moverse = not bloqueado
 
