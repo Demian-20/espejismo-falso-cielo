@@ -10,6 +10,9 @@ const RETRATO_MATEO_SONRIENDO := "res://assets/retratos/mateo_sonriendo.png"
 const VOZ_CHENTE := 0.85
 const VOZ_MATEO := 0.98
 
+## Se emite cuando Mateo decide si le da o no los $20 (#30: con esto anochece).
+signal decision_tomada(ayudo: bool)
+
 
 func _ready() -> void:
 	if nombre_mostrado == "":
@@ -31,6 +34,13 @@ func interactuar() -> void:
 		])
 		return
 
+	# La decisión se toma una sola vez: de noche ya no vuelve a pedir.
+	if GameState.etapa_prologo >= GameState.Etapa.NOCHE:
+		await HUD.dialogo([
+			HUD.linea("Don Chente", "Ándale pues, muchacho... fíjate por dónde pisas.", RETRATO_CHENTE_SERIO, VOZ_CHENTE),
+		])
+		return
+
 	await HUD.dialogo([
 		HUD.linea("Don Chente", "Treinta y ocho grados y ya se está metiendo el sol... Allá en la tele dicen que vivimos en Suiza, muchacho.", RETRATO_CHENTE_NORMAL, VOZ_CHENTE),
 	])
@@ -39,6 +49,8 @@ func interactuar() -> void:
 		HUD.linea("Don Chente", "Pero el hambre pega igualito que ayer. ¿No te sobrarán veinte pesitos pa' un bote de agua?", RETRATO_CHENTE_TRISTE, VOZ_CHENTE),
 		["Darle los $20", "No darle nada"]
 	)
+	if opcion < 0:
+		return
 
 	if opcion == 0:
 		if GameState.ayudar_a_chente():
@@ -51,9 +63,11 @@ func interactuar() -> void:
 			await HUD.dialogo([
 				HUD.linea("Don Chente", "Parece que ya no traes feria, muchacho...", RETRATO_CHENTE_TRISTE, VOZ_CHENTE),
 			])
+		decision_tomada.emit(GameState.ayudo_a_chente)
 	else:
 		GameState.ayudo_a_chente = false
 		await HUD.dialogo([
 			HUD.linea("Mateo", "Ando igual de bruja, jefe. A la vuelta.", RETRATO_MATEO_NORMAL, VOZ_MATEO),
 			HUD.linea("Don Chente", "Cada quien camina con lo que carga... Ojalá no te toque pedir ayuda cuando nadie mire.", RETRATO_CHENTE_SERIO, VOZ_CHENTE),
 		])
+		decision_tomada.emit(false)

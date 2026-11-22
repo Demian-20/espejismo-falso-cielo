@@ -1,4 +1,45 @@
-[gd_scene format=3]
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/nivel/eventos_prologo.gd" id="1_eventos"]
+[ext_resource type="Script" path="res://scripts/nivel/pista.gd" id="2_pista"]
+[ext_resource type="Texture2D" path="res://assets/pistas/volante.png" id="3_volante"]
+[ext_resource type="Texture2D" path="res://assets/pistas/casquillo.png" id="4_casquillo"]
+[ext_resource type="Texture2D" path="res://assets/pistas/nota.png" id="5_nota"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cruce"]
+size = Vector2(16, 1530)
 
 [node name="Objetos" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("1_eventos")
+
+[node name="DisparadorChente" type="Area2D" parent="."]
+position = Vector2(2076, 765)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DisparadorChente"]
+shape = SubResource("RectangleShape2D_cruce")
+
+[node name="Pistas" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Volante" type="Node2D" parent="Pistas"]
+position = Vector2(1500, 1012)
+script = ExtResource("2_pista")
+evidencia = "Volante del callejón"
+textura = ExtResource("3_volante")
+pensamiento = "Un volante de \"SE BUSCA\" pegado en la banca... es el mismo muchacho de la ficha. Dice que lo vieron por última vez cerca del callejón de atrás."
+
+[node name="Nota" type="Node2D" parent="Pistas"]
+position = Vector2(2140, 1300)
+script = ExtResource("2_pista")
+evidencia = "Nota arrugada"
+textura = ExtResource("5_nota")
+pensamiento = "\"Entrega 9:30. Callejón de la Catedral. Que nadie pase.\" ...¿Qué será esto?"
+
+[node name="Casquillo" type="Node2D" parent="Pistas"]
+position = Vector2(2276, 228)
+script = ExtResource("2_pista")
+evidencia = "Casquillo de bala"
+textura = ExtResource("4_casquillo")
+pensamiento = "¿Un casquillo de bala? Está nuevecito... y justo a la entrada del callejón."

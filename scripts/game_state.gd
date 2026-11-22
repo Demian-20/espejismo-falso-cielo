@@ -36,6 +36,11 @@ const PUNTOS_FICHA_CARMEN: int = 100
 const PUNTOS_AYUDAR_CHENTE: int = 250
 const PUNTOS_HABLAR_NPC: int = 50
 const PUNTOS_ESCAPAR_NARCO: int = 300
+const PUNTOS_PISTA: int = 75
+## Pistas opcionales escondidas en la plaza.
+const TOTAL_PISTAS: int = 3
+## Personas de la plaza con las que se puede hablar (Don Chente, Doña Carmen, Cárdenas y 3 civiles).
+const TOTAL_NPCS: int = 6
 
 ## Lo que Mateo le da a Don Chente.
 const DINERO_PARA_CHENTE: int = 20
@@ -143,6 +148,11 @@ func hablar_con_npc(id_npc: String) -> bool:
 	_npcs_hablados.append(id_npc)
 	agregar_puntos(PUNTOS_HABLAR_NPC)
 	return true
+
+
+## Cuántas personas distintas de la plaza ya hablaron con Mateo.
+func npcs_hablados() -> int:
+	return _npcs_hablados.size()
 
 
 ## Guarda una copia del estado actual y la posición del jugador para el "Reintentar".
