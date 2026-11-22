@@ -7,14 +7,12 @@ const VOZ_MATEO := 0.98
 const VOZ_VALERIA := 1.32
 const VOZ_ANTONIO := 0.78
 
-static var _llamadas_iniciales_listas: bool = false
-
 
 func _ready() -> void:
 	GameState.etapa_cambio.connect(_al_cambiar_etapa)
 	_al_cambiar_etapa(GameState.etapa_prologo)
-	if not _llamadas_iniciales_listas:
-		_llamadas_iniciales_listas = true
+	if not GameState.llamadas_iniciales_vistas:
+		GameState.llamadas_iniciales_vistas = true
 		await _reproducir_llamadas_iniciales()
 	else:
 		HUD.mostrar_marcador(true)

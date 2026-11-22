@@ -40,6 +40,9 @@ const PUNTOS_ESCAPAR_NARCO: int = 300
 ## Lo que Mateo le da a Don Chente.
 const DINERO_PARA_CHENTE: int = 20
 
+## Archivo de la partida guardada (en la carpeta de datos del usuario).
+const RUTA_PARTIDA: String = "user://partida.json"
+
 var puntaje: int = 0:
 	set(valor):
 		var anterior := puntaje
@@ -73,6 +76,10 @@ var etapa_prologo: int = Etapa.TARDE:
 		if valor != etapa_prologo:
 			etapa_prologo = valor
 			etapa_cambio.emit(etapa_prologo)
+
+## true cuando ya sonaron las llamadas de Valeria y Antonio al llegar a la plaza (#15).
+## No se reinicia al reintentar, solo con una partida nueva.
+var llamadas_iniciales_vistas: bool = false
 
 ## NPCs con los que ya se habló, para dar los +50 puntos solo la primera vez.
 var _npcs_hablados: Array[String] = []
@@ -197,3 +204,89 @@ func reiniciar() -> void:
 	_npcs_hablados.clear()
 	_punto_control.clear()
 	_posicion_pendiente = null
+
+
+## Empieza una partida nueva desde la intro: reinicia todo, incluidas las llamadas.
+func nueva_partida() -> void:
+	reiniciar()
+	llamadas_iniciales_vistas = false
+
+
+## Solo se puede guardar de tarde, mientras Mateo explora la plaza.
+## De noche y en el callejón la historia ya está en el desenlace.
+func puede_guardar() -> bool:
+	return etapa_prologo == Etapa.TARDE
+
+
+func hay_partida_guardada() -> bool:
+	return FileAccess.file_exists(RUTA_PARTIDA)
+
+
+## Guarda la partida en disco con la escena y la posición del jugador.
+## Regresa false si no se puede guardar en este momento o si falló el archivo.
+func guardar_partida(escena: String, posicion_jugador: Vector2) -> bool:
+	if not puede_guardar() or escena == "":
+		return false
+	var datos := {
+		"version": 1,
+		"fecha": Time.get_datetime_string_from_system(false, true),
+		"escena": escena,
+		"posicion": [posicion_jugador.x, posicion_jugador.y],
+		"puntaje": puntaje,
+		"vidas": vidas,
+		"dinero": dinero,
+		"evidencias": evidencias.duplicate(),
+		"ayudo_a_chente": ayudo_a_chente,
+		"etapa_prologo": etapa_prologo,
+		"npcs_hablados": _npcs_hablados.duplicate(),
+		"llamadas_iniciales_vistas": llamadas_iniciales_vistas,
+	}
+	var archivo := FileAccess.open(RUTA_PARTIDA, FileAccess.WRITE)
+	if archivo == null:
+		return false
+	archivo.store_string(JSON.stringify(datos, "\t"))
+	return true
+
+
+## Fecha de la partida guardada (o "" si no hay), para mostrarla en el menú.
+func fecha_partida_guardada() -> String:
+	var datos := _leer_partida()
+	return str(datos.get("fecha", ""))
+
+
+## Carga la partida guardada y regresa la escena donde hay que aparecer (o "" si no hay).
+## El jugador aparece en su posición guardada y esa partida queda como punto de control.
+func cargar_partida() -> String:
+	var datos := _leer_partida()
+	if datos.is_empty():
+		return ""
+	reiniciar()
+	puntaje = int(datos.get("puntaje", 0))
+	vidas = int(datos.get("vidas", VIDAS_INICIALES))
+	dinero = int(datos.get("dinero", DINERO_INICIAL))
+	var lista: Array = datos.get("evidencias", [])
+	for e in lista:
+		evidencias.append(str(e))
+	evidencias_cambio.emit(evidencias.duplicate())
+	ayudo_a_chente = bool(datos.get("ayudo_a_chente", false))
+	etapa_prologo = int(datos.get("etapa_prologo", Etapa.TARDE))
+	var hablados: Array = datos.get("npcs_hablados", [])
+	for n in hablados:
+		_npcs_hablados.append(str(n))
+	llamadas_iniciales_vistas = bool(datos.get("llamadas_iniciales_vistas", true))
+	var p: Array = datos.get("posicion", [0, 0])
+	var posicion := Vector2(float(p[0]), float(p[1]))
+	if posicion != Vector2.ZERO:
+		_posicion_pendiente = posicion
+	guardar_punto_control(posicion)
+	return str(datos.get("escena", ""))
+
+
+func _leer_partida() -> Dictionary:
+	if not hay_partida_guardada():
+		return {}
+	var texto := FileAccess.get_file_as_string(RUTA_PARTIDA)
+	var datos: Variant = JSON.parse_string(texto)
+	if datos is Dictionary:
+		return datos
+	return {}

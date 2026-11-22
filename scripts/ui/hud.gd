@@ -12,6 +12,10 @@ signal bloqueo_cambio(bloqueado: bool)
 signal dialogo_iniciado
 signal dialogo_terminado
 
+const ESCENA_MENU := "res://scenes/ui/menu_principal.tscn"
+
+## false en el menú principal: no se abre la pausa ni el inventario y no hay marcador.
+var en_juego: bool = true
 var caja: CajaDialogo
 var marcador: Marcador
 var inventario: PanelInventario
@@ -38,6 +42,7 @@ func _ready() -> void:
 	menu_pausa.continuar_presionado.connect(continuar)
 	menu_pausa.reintentar_presionado.connect(reintentar)
 	menu_pausa.salir_presionado.connect(salir)
+	menu_pausa.guardar_presionado.connect(guardar)
 	add_child(menu_pausa)
 	game_over = preload("res://scenes/ui/game_over.tscn").instantiate()
 	game_over.reintentar_presionado.connect(reintentar)
@@ -128,8 +133,43 @@ func reintentar() -> void:
 	get_tree().reload_current_scene()
 
 
+## Regresa al menú principal (desde la pausa o el Game Over).
 func salir() -> void:
-	get_tree().quit()
+	get_tree().paused = false
+	salir_del_juego()
+	get_tree().change_scene_to_file(ESCENA_MENU)
+
+
+## Guarda la partida desde el menú de pausa y avisa si se pudo.
+func guardar() -> void:
+	var escena := get_tree().current_scene
+	var jugador: Node2D = null
+	if escena != null:
+		jugador = escena.get_node_or_null("Jugador") as Node2D
+	if not GameState.puede_guardar():
+		menu_pausa.mostrar_mensaje("Solo se puede guardar de tarde, mientras exploras la plaza.")
+		return
+	if jugador == null:
+		menu_pausa.mostrar_mensaje("Aquí no se puede guardar.")
+		return
+	if GameState.guardar_partida(escena.scene_file_path, jugador.global_position):
+		menu_pausa.mostrar_mensaje("Partida guardada.")
+	else:
+		menu_pausa.mostrar_mensaje("No se pudo guardar la partida.")
+
+
+## La llama el menú principal: cierra todo lo del juego y oculta el marcador.
+func salir_del_juego() -> void:
+	en_juego = false
+	menu_pausa.ocultar()
+	game_over.visible = false
+	reiniciar_interfaz()
+	mostrar_marcador(false)
+
+
+## La llama el menú principal al empezar o cargar una partida.
+func entrar_al_juego() -> void:
+	en_juego = true
 
 
 func esta_en_pausa() -> bool:
@@ -154,7 +194,7 @@ func mostrar_marcador(mostrar: bool) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if game_over.visible:
+	if game_over.visible or not en_juego:
 		return
 	var tecla_pausa := event.is_action_pressed("pausa") or event.is_action_pressed("ui_cancel")
 	if menu_pausa.visible:
