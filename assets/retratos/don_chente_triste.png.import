@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cyqoh8opdbphb"
-path="res://.godot/imported/don_chente_normal.png-2caf031a5a4a7e5669d8170d32ec9bb2.ctex"
+uid="uid://dassmqrdlsyhr"
+path="res://.godot/imported/don_chente_triste.png-36e2d5ba8b41d10a0e99fd3f4d4866b7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://scripts/don_chente_normal.png"
-dest_files=["res://.godot/imported/don_chente_normal.png-2caf031a5a4a7e5669d8170d32ec9bb2.ctex"]
+source_file="res://assets/retratos/don_chente_triste.png"
+dest_files=["res://.godot/imported/don_chente_triste.png-36e2d5ba8b41d10a0e99fd3f4d4866b7.ctex"]
 
 [params]
 

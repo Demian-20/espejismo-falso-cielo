@@ -5,7 +5,7 @@ extends CanvasLayer
 
 ## Se emite al presionar Reintentar; el HUD regresa al punto de control y recarga el nivel.
 signal reintentar_presionado
-## Se emite al presionar Salir.
+## Se emite al presionar Salir al menú.
 signal salir_presionado
 
 ## Segundos de espera antes de mostrarse, para que se alcance a ver la animación de muerte.
@@ -53,7 +53,7 @@ func _ready() -> void:
 	_reintentar.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_reintentar.pressed.connect(_al_reintentar)
 	_contenido.add_child(_reintentar)
-	_salir = EstiloUI.boton("Salir")
+	_salir = EstiloUI.boton("Salir al menú")
 	_salir.alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_salir.pressed.connect(_al_salir)
 	_contenido.add_child(_salir)

@@ -1,15 +1,19 @@
 class_name MenuPausa
 extends CanvasLayer
-## Menú de pausa (Esc o P): continuar, reintentar desde el último punto de control o salir.
+## Menú de pausa (Esc o P): continuar, guardar la partida, reintentar desde el último
+## punto de control o salir al menú principal.
 ## Lo abre y lo cierra el HUD; este script solo dibuja el menú y avisa qué botón se presionó.
 
 signal continuar_presionado
 signal reintentar_presionado
 signal salir_presionado
+signal guardar_presionado
 
 var _continuar: Button
+var _guardar: Button
 var _reintentar: Button
 var _salir: Button
+var _mensaje: Label
 
 
 func _ready() -> void:
@@ -34,10 +38,15 @@ func _ready() -> void:
 	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	columna.add_child(titulo)
 	_continuar = _boton("Continuar", continuar_presionado)
+	_guardar = _boton("Guardar partida", guardar_presionado)
 	_reintentar = _boton("Reintentar", reintentar_presionado)
-	_salir = _boton("Salir", salir_presionado)
-	for b in [_continuar, _reintentar, _salir]:
+	_salir = _boton("Salir al menú", salir_presionado)
+	for b in [_continuar, _guardar, _reintentar, _salir]:
 		columna.add_child(b)
+	_mensaje = EstiloUI.etiqueta("", 16, EstiloUI.NOMBRE)
+	_mensaje.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_mensaje.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	columna.add_child(_mensaje)
 	var ayuda := EstiloUI.etiqueta("[Esc] Continuar", 14, EstiloUI.TENUE)
 	ayuda.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	columna.add_child(ayuda)
@@ -48,12 +57,18 @@ func mostrar() -> void:
 		_reintentar.text = "Reintentar desde el punto de control"
 	else:
 		_reintentar.text = "Reintentar desde el inicio"
+	_mensaje.text = ""
 	visible = true
 	_continuar.grab_focus()
 
 
 func ocultar() -> void:
 	visible = false
+
+
+## Muestra un aviso corto debajo de los botones, por ejemplo "Partida guardada."
+func mostrar_mensaje(texto: String) -> void:
+	_mensaje.text = texto
 
 
 func _boton(texto: String, senal: Signal) -> Button:
