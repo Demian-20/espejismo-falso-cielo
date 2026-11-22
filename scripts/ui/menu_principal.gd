@@ -9,6 +9,8 @@ const VERSION := "v0.2.0-beta"
 
 var _principal: VBoxContainer
 var _configuracion: PanelContainer
+var _como_jugar: PanelComoJugar
+var _boton_ayuda: Button
 var _nueva: Button
 var _cargar: Button
 var _ajustes: Button
@@ -30,6 +32,7 @@ func _ready() -> void:
 	_armar_fondo()
 	_armar_principal()
 	_armar_configuracion()
+	_armar_como_jugar()
 	_telon = ColorRect.new()
 	_telon.color = Color(0, 0, 0, 1)
 	_telon.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -41,9 +44,13 @@ func _ready() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _configuracion.visible and (event.is_action_pressed("ui_cancel") or event.is_action_pressed("pausa")):
+	var atras := event.is_action_pressed("ui_cancel") or event.is_action_pressed("pausa")
+	if atras and _configuracion.visible:
 		get_viewport().set_input_as_handled()
 		_mostrar_principal()
+	elif atras and _como_jugar.visible:
+		get_viewport().set_input_as_handled()
+		_como_jugar.cerrar()
 
 
 func _armar_fondo() -> void:
@@ -102,11 +109,13 @@ func _armar_principal() -> void:
 	_nueva = _boton("Nueva partida", _al_nueva_partida)
 	_cargar = _boton("Cargar partida", _al_cargar_partida)
 	_detalle_cargar = EstiloUI.etiqueta("", 13, EstiloUI.TENUE)
+	_boton_ayuda = _boton("Cómo jugar", _mostrar_como_jugar)
 	_ajustes = _boton("Configuración", _mostrar_configuracion)
 	_salir = _boton("Salir", _al_salir)
 	_principal.add_child(_nueva)
 	_principal.add_child(_cargar)
 	_principal.add_child(_detalle_cargar)
+	_principal.add_child(_boton_ayuda)
 	_principal.add_child(_ajustes)
 	_principal.add_child(_salir)
 	# En la web no se puede cerrar la pestaña desde el juego.
@@ -150,6 +159,22 @@ func _armar_configuracion() -> void:
 	var ayuda := EstiloUI.etiqueta("[Esc] Volver", 13, EstiloUI.TENUE)
 	ayuda.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	columna.add_child(ayuda)
+
+
+func _armar_como_jugar() -> void:
+	var centro := CenterContainer.new()
+	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
+	centro.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(centro)
+	_como_jugar = PanelComoJugar.new()
+	_como_jugar.visible = false
+	_como_jugar.cerrado.connect(_mostrar_principal)
+	centro.add_child(_como_jugar)
+
+
+func _mostrar_como_jugar() -> void:
+	_principal.visible = false
+	_como_jugar.abrir()
 
 
 func _mostrar_principal() -> void:

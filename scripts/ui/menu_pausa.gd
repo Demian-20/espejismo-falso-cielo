@@ -14,6 +14,9 @@ var _guardar: Button
 var _reintentar: Button
 var _salir: Button
 var _mensaje: Label
+var _panel: PanelContainer
+var _ayuda: PanelComoJugar
+var _boton_ayuda: Button
 
 
 func _ready() -> void:
@@ -27,21 +30,24 @@ func _ready() -> void:
 	var centro := CenterContainer.new()
 	centro.set_anchors_preset(Control.PRESET_FULL_RECT)
 	add_child(centro)
-	var panel := PanelContainer.new()
-	panel.add_theme_stylebox_override("panel", EstiloUI.panel(3, 24))
-	centro.add_child(panel)
+	_panel = PanelContainer.new()
+	_panel.add_theme_stylebox_override("panel", EstiloUI.panel(3, 24))
+	centro.add_child(_panel)
 	var columna := VBoxContainer.new()
 	columna.custom_minimum_size = Vector2(420, 0)
 	columna.add_theme_constant_override("separation", 12)
-	panel.add_child(columna)
+	_panel.add_child(columna)
 	var titulo := EstiloUI.etiqueta("PAUSA", 40, EstiloUI.NOMBRE)
 	titulo.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	columna.add_child(titulo)
 	_continuar = _boton("Continuar", continuar_presionado)
 	_guardar = _boton("Guardar partida", guardar_presionado)
 	_reintentar = _boton("Reintentar", reintentar_presionado)
+	_boton_ayuda = EstiloUI.boton("Cómo jugar")
+	_boton_ayuda.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_boton_ayuda.pressed.connect(_abrir_ayuda)
 	_salir = _boton("Salir al menú", salir_presionado)
-	for b in [_continuar, _guardar, _reintentar, _salir]:
+	for b in [_continuar, _guardar, _reintentar, _boton_ayuda, _salir]:
 		columna.add_child(b)
 	_mensaje = EstiloUI.etiqueta("", 16, EstiloUI.NOMBRE)
 	_mensaje.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
@@ -50,6 +56,10 @@ func _ready() -> void:
 	var ayuda := EstiloUI.etiqueta("[Esc] Continuar", 14, EstiloUI.TENUE)
 	ayuda.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	columna.add_child(ayuda)
+	_ayuda = PanelComoJugar.new()
+	_ayuda.visible = false
+	_ayuda.cerrado.connect(_al_cerrar_ayuda)
+	centro.add_child(_ayuda)
 
 
 func mostrar() -> void:
@@ -58,12 +68,32 @@ func mostrar() -> void:
 	else:
 		_reintentar.text = "Reintentar desde el inicio"
 	_mensaje.text = ""
+	_ayuda.visible = false
+	_panel.visible = true
 	visible = true
 	_continuar.grab_focus()
 
 
 func ocultar() -> void:
 	visible = false
+
+
+func ayuda_abierta() -> bool:
+	return _ayuda.visible
+
+
+func cerrar_ayuda() -> void:
+	_ayuda.cerrar()
+
+
+func _abrir_ayuda() -> void:
+	_panel.visible = false
+	_ayuda.abrir()
+
+
+func _al_cerrar_ayuda() -> void:
+	_panel.visible = true
+	_boton_ayuda.grab_focus()
 
 
 ## Muestra un aviso corto debajo de los botones, por ejemplo "Partida guardada."
