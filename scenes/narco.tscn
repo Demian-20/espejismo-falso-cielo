@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/narco.gd" id="1_narco"]
+[ext_resource type="SpriteFrames" path="res://assets/personajes/narco/narco.tres" id="2_frames"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_narco"]
+size = Vector2(14, 6)
+
+[node name="Narco" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_narco")
+nombre_mostrado = "Narco"
+velocidad_base = 200.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -18)
+scale = Vector2(1.5, 1.5)
+sprite_frames = ExtResource("2_frames")
+animation = &"idle_lado"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -3)
+shape = SubResource("RectangleShape2D_narco")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 8.0
+target_desired_distance = 8.0
+radius = 12.0

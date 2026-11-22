@@ -1,4 +1,191 @@
-[gd_scene format=3 uid="uid://dlgp2ah2gwsyp"]
+[gd_scene load_steps=19 format=3 uid="uid://dlgp2ah2gwsyp"]
+
+[ext_resource type="Script" path="res://scripts/nivel/callejon.gd" id="1_calle"]
+[ext_resource type="Script" path="res://scripts/interactuable.gd" id="2_inter"]
+[ext_resource type="Texture2D" path="res://assets/callejon/fondo.png" id="3_fondo"]
+[ext_resource type="Texture2D" path="res://assets/callejon/cajas.png" id="4_cajas"]
+[ext_resource type="Texture2D" path="res://assets/callejon/contenedor.png" id="5_conte"]
+[ext_resource type="Texture2D" path="res://assets/callejon/escombros.png" id="6_escom"]
+[ext_resource type="Texture2D" path="res://assets/callejon/botes.png" id="7_botes"]
+[ext_resource type="PackedScene" path="res://scenes/narco.tscn" id="8_narco"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_entrada"]
+radius = 60.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lado"]
+size = Vector2(150, 1700)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_reja"]
+size = Vector2(640, 200)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fondo"]
+size = Vector2(640, 50)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cajas"]
+size = Vector2(80, 30)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_conte"]
+size = Vector2(124, 36)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_escom"]
+size = Vector2(104, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_botes"]
+size = Vector2(84, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_encuentro"]
+size = Vector2(340, 40)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_final"]
+size = Vector2(340, 90)
 
 [node name="Callejon" type="Node2D"]
 y_sort_enabled = true
+script = ExtResource("1_calle")
+
+[node name="Entrada" type="Area2D" parent="."]
+position = Vector2(2193, 159)
+script = ExtResource("2_inter")
+texto = "Cortar camino por el callejón"
+activo = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Entrada"]
+shape = SubResource("CircleShape2D_entrada")
+
+[node name="Zona" type="Node2D" parent="."]
+y_sort_enabled = true
+position = Vector2(3200, 0)
+
+[node name="Fondo" type="Sprite2D" parent="Zona"]
+z_index = -1
+texture = ExtResource("3_fondo")
+centered = false
+
+[node name="Paredes" type="StaticBody2D" parent="Zona"]
+
+[node name="Izquierda" type="CollisionShape2D" parent="Zona/Paredes"]
+position = Vector2(75, 850)
+shape = SubResource("RectangleShape2D_lado")
+
+[node name="Derecha" type="CollisionShape2D" parent="Zona/Paredes"]
+position = Vector2(565, 850)
+shape = SubResource("RectangleShape2D_lado")
+
+[node name="Reja" type="CollisionShape2D" parent="Zona/Paredes"]
+position = Vector2(320, 100)
+shape = SubResource("RectangleShape2D_reja")
+
+[node name="Fondo" type="CollisionShape2D" parent="Zona/Paredes"]
+position = Vector2(320, 1675)
+shape = SubResource("RectangleShape2D_fondo")
+
+[node name="Navegacion" type="NavigationRegion2D" parent="Zona"]
+y_sort_enabled = true
+
+[node name="Cajas" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(444, 1090)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Cajas"]
+texture = ExtResource("4_cajas")
+offset = Vector2(0, -36)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Cajas"]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_cajas")
+
+[node name="Escombros" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(340, 1090)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Escombros"]
+texture = ExtResource("6_escom")
+offset = Vector2(0, -26)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Escombros"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_escom")
+
+[node name="Contenedor" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(216, 880)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Contenedor"]
+texture = ExtResource("5_conte")
+offset = Vector2(0, -34)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Contenedor"]
+position = Vector2(0, -18)
+shape = SubResource("RectangleShape2D_conte")
+
+[node name="Botes" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(328, 880)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Botes"]
+texture = ExtResource("7_botes")
+offset = Vector2(0, -30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Botes"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_botes")
+
+[node name="Escombros2" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(432, 670)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Escombros2"]
+texture = ExtResource("6_escom")
+offset = Vector2(0, -26)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Escombros2"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_escom")
+
+[node name="Cajas2" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(334, 670)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Cajas2"]
+texture = ExtResource("4_cajas")
+offset = Vector2(0, -36)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Cajas2"]
+position = Vector2(0, -14)
+shape = SubResource("RectangleShape2D_cajas")
+
+[node name="Botes2" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(196, 470)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Botes2"]
+texture = ExtResource("7_botes")
+offset = Vector2(0, -30)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Botes2"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_botes")
+
+[node name="Contenedor2" type="StaticBody2D" parent="Zona/Navegacion"]
+position = Vector2(310, 470)
+
+[node name="Sprite2D" type="Sprite2D" parent="Zona/Navegacion/Contenedor2"]
+texture = ExtResource("5_conte")
+offset = Vector2(0, -34)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Navegacion/Contenedor2"]
+position = Vector2(0, -18)
+shape = SubResource("RectangleShape2D_conte")
+
+[node name="Narco" parent="Zona" instance=ExtResource("8_narco")]
+position = Vector2(455, 1480)
+
+[node name="InicioJugador" type="Marker2D" parent="Zona"]
+position = Vector2(235, 1615)
+
+[node name="Encuentro" type="Area2D" parent="Zona"]
+position = Vector2(320, 1340)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Encuentro"]
+shape = SubResource("RectangleShape2D_encuentro")
+
+[node name="Final" type="Area2D" parent="Zona"]
+position = Vector2(320, 245)
+collision_layer = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zona/Final"]
+shape = SubResource("RectangleShape2D_final")
