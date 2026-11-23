@@ -39,8 +39,12 @@ var _dinero_previo: int = 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	_crear_bus("Musica", -4.0)
-	_crear_bus("Efectos", 0.0)
+	# Los buses Musica y Efectos vienen de default_bus_layout.tres. En la versión web, crearlos
+	# por código deja mal conectadas sus salidas y no se escucha nada (#45).
+	if AudioServer.get_bus_index("Musica") == -1 or AudioServer.get_bus_index("Efectos") == -1:
+		push_warning("Audio: faltan los buses de default_bus_layout.tres; se crean por código")
+		_crear_bus("Musica", -4.0)
+		_crear_bus("Efectos", 0.0)
 	for i in CANALES:
 		var canal := AudioStreamPlayer.new()
 		canal.bus = "Efectos"
