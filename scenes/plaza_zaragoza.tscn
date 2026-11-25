@@ -36,38 +36,39 @@ visible = false
 [node name="Npcs" parent="." instance=ExtResource("5_npcs")]
 
 [node name="DonChente" parent="Npcs" instance=ExtResource("6_15mov")]
+position = Vector2(1952, 594)
 script = ExtResource("7_yvigb")
 
 [node name="AnimatedSprite2D" parent="Npcs/DonChente" index="0"]
-position = Vector2(1952, 594)
+position = Vector2(0, -18)
 scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("8_y5gbm")
 animation = &"idle_lado"
 frame_progress = 0.106491
 
 [node name="CollisionShape2D" parent="Npcs/DonChente" index="1"]
-position = Vector2(1961, 597)
+position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_twa45")
 
-[node name="DonaCarme" parent="Npcs" instance=ExtResource("6_15mov")]
+[node name="DonaCarmen" parent="Npcs" instance=ExtResource("6_15mov")]
+position = Vector2(839, 899)
 script = ExtResource("9_wpjid")
 
-[node name="AnimatedSprite2D" parent="Npcs/DonaCarme" index="0"]
-position = Vector2(841, 689)
+[node name="AnimatedSprite2D" parent="Npcs/DonaCarmen" index="0"]
+position = Vector2(0, -3)
 scale = Vector2(1.5, 1.5)
 sprite_frames = ExtResource("10_abccd")
 animation = &"idle_lado"
 
-[node name="CollisionShape2D" parent="Npcs/DonaCarme" index="1"]
-position = Vector2(839.531, 684.313)
+[node name="CollisionShape2D" parent="Npcs/DonaCarmen" index="1"]
+position = Vector2(0, -3)
 shape = SubResource("RectangleShape2D_tb7ld")
 
 [node name="Callejon" parent="." instance=ExtResource("6_calle")]
-position = Vector2(-3, -9)
-script = null
+position = Vector2(0, 15)
 
 [node name="Jugador" parent="." instance=ExtResource("2_k02xx")]
 position = Vector2(989, 694)
 
 [editable path="Npcs/DonChente"]
-[editable path="Npcs/DonaCarme"]
+[editable path="Npcs/DonaCarmen"]

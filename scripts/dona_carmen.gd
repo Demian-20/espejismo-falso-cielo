@@ -24,13 +24,12 @@ func _ready() -> void:
 func interactuar() -> void:
 	GameState.hablar_con_npc(id_npc)
 
-	if _entrego_ficha:
+	if GameState.tiene_evidencia("Ficha de Búsqueda de Doña Carmen"):
 		await HUD.dialogo([
 			HUD.linea("Doña Carmen", "Cuida esa libreta, mijo. Ahí están los nombres que nadie quiere ver.", RETRATO_CARMEN_SERIA, VOZ_CARMEN),
 		])
 		return
 
-	_entrego_ficha = true
 	await HUD.dialogo([
 		HUD.linea("Doña Carmen", "Disculpa, joven... ¿No habrás visto a mi muchacho? Traigo su foto desde la mañana y aquí en Palacio nomás me dan largas.", RETRATO_CARMEN_TRISTE, VOZ_CARMEN),
 		HUD.linea("Mateo", "¿Desde la mañana? ¿Y qué le dijeron adentro?", RETRATO_MATEO_CONFUNDIDO, VOZ_MATEO),
@@ -40,5 +39,5 @@ func interactuar() -> void:
 		HUD.linea("Doña Carmen", "Dios te cuide, muchacho. De verdad gracias por no voltear la cara.", RETRATO_CARMEN_AGRADECIDA, VOZ_CARMEN),
 	])
 
-	GameState.agregar_evidencia("Ficha de Doña Carmen")
-	GameState.agregar_puntos(GameState.PUNTOS_FICHA_CARMEN)
+	if GameState.agregar_evidencia("Ficha de Búsqueda de Doña Carmen"):
+		GameState.agregar_puntos(GameState.PUNTOS_FICHA_CARMEN)
