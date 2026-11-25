@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" path="res://scripts/nivel/callejon.gd" id="1_calle"]
 [ext_resource type="Script" path="res://scripts/interactuable.gd" id="2_inter"]
-[ext_resource type="Texture2D" path="res://assets/callejon/fondo.png" id="3_fondo"]
-[ext_resource type="Texture2D" path="res://assets/callejon/cajas.png" id="4_cajas"]
-[ext_resource type="Texture2D" path="res://assets/callejon/contenedor.png" id="5_conte"]
-[ext_resource type="Texture2D" path="res://assets/callejon/escombros.png" id="6_escom"]
-[ext_resource type="Texture2D" path="res://assets/callejon/botes.png" id="7_botes"]
+[ext_resource type="Texture2D" uid="uid://1v084bd8ua78" path="res://assets/callejon/fondo.png" id="3_fondo"]
+[ext_resource type="Texture2D" uid="uid://bdqp2482hrc6s" path="res://assets/callejon/cajas.png" id="4_cajas"]
+[ext_resource type="Texture2D" uid="uid://xjlpjy7oxdu4" path="res://assets/callejon/contenedor.png" id="5_conte"]
+[ext_resource type="Texture2D" uid="uid://b26ohfyycpead" path="res://assets/callejon/escombros.png" id="6_escom"]
+[ext_resource type="Texture2D" uid="uid://dfibrdki3kw38" path="res://assets/callejon/botes.png" id="7_botes"]
 [ext_resource type="PackedScene" path="res://scenes/narco.tscn" id="8_narco"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_entrada"]
@@ -24,11 +24,11 @@ size = Vector2(640, 50)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cajas"]
 size = Vector2(80, 30)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_conte"]
-size = Vector2(124, 36)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_escom"]
 size = Vector2(104, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_conte"]
+size = Vector2(124, 36)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_botes"]
 size = Vector2(84, 28)

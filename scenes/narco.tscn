@@ -1,7 +1,7 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=4 format=3 uid="uid://cu7yop18xdncw"]
 
 [ext_resource type="Script" path="res://scripts/narco.gd" id="1_narco"]
-[ext_resource type="SpriteFrames" path="res://assets/personajes/narco/narco.tres" id="2_frames"]
+[ext_resource type="SpriteFrames" uid="uid://cc7u5kexlkrsx" path="res://assets/personajes/narco/narco.tres" id="2_frames"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_narco"]
 size = Vector2(14, 6)

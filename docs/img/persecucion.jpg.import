@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d08uprlud2n5a"
-path="res://.godot/imported/don_chente.png-0797f57c472b7e5302d13da7cba3a97a.ctex"
+uid="uid://bmub60hnjt3fu"
+path="res://.godot/imported/persecucion.jpg-3d80d2e7c885ef3e32379e0542010fc8.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/retratos/don_chente.png"
-dest_files=["res://.godot/imported/don_chente.png-0797f57c472b7e5302d13da7cba3a97a.ctex"]
+source_file="res://docs/img/persecucion.jpg"
+dest_files=["res://.godot/imported/persecucion.jpg-3d80d2e7c885ef3e32379e0542010fc8.ctex"]
 
 [params]
 
