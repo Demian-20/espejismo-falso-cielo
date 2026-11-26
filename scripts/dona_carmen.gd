@@ -19,6 +19,9 @@ func _ready() -> void:
 	if id_npc == "":
 		id_npc = "dona_carmen"
 	super._ready()
+	if animacion and animacion.sprite_frames and animacion.sprite_frames.has_animation("idle_lado"):
+		animacion.play("idle_lado")
+		animacion.flip_h = false
 
 
 func interactuar() -> void:

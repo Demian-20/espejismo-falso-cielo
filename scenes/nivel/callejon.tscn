@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://xjlpjy7oxdu4" path="res://assets/callejon/contenedor.png" id="5_conte"]
 [ext_resource type="Texture2D" uid="uid://b26ohfyycpead" path="res://assets/callejon/escombros.png" id="6_escom"]
 [ext_resource type="Texture2D" uid="uid://dfibrdki3kw38" path="res://assets/callejon/botes.png" id="7_botes"]
-[ext_resource type="PackedScene" path="res://scenes/narco.tscn" id="8_narco"]
+[ext_resource type="PackedScene" uid="uid://cu7yop18xdncw" path="res://scenes/narco.tscn" id="8_narco"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_entrada"]
 radius = 60.0
