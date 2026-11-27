@@ -19,6 +19,14 @@ enum Fase { AFUERA, ENTRANDO, ENCUENTRO, PERSECUCION, ACORRALADO }
 
 const RETRATO_MATEO := "res://assets/retratos/mateo_asustado.png"
 const RETRATO_NARCO := "res://assets/retratos/narco.png"
+const RETRATO_NARCO_ENOJADO := "res://assets/retratos/narco_enojado.png"
+const RETRATO_NARCO_ASUSTADO := "res://assets/retratos/narco_asustado.png"
+const RETRATO_CHENTE_HIBRIDO_SERIO := "res://assets/retratos/don_chente_hibrido_serio.png"
+const RETRATO_CHENTE_HIBRIDO_SONRIENDO := "res://assets/retratos/don_chente_hibrido_sonriendo.png"
+const IMG_SOMBRA_NARCO := preload("res://assets/intro/sombra_narco.jpg")
+const IMG_NARCO_DESAPARECE := preload("res://assets/intro/narco_desaparece.jpg")
+const ESCENA_JUGADOR := preload("res://scenes/jugador.tscn")
+const VOZ_CHENTE := 0.85
 const VOZ_MATEO := 0.98
 const VOZ_NARCO := 0.7
 ## Tamaño de la zona del callejón (el fondo mide 640 x 1700).
@@ -58,6 +66,8 @@ func _ready() -> void:
 	narco.mirar_hacia(narco.global_position + Vector2.RIGHT)
 	_crear_velo()
 	_hornear_navegacion()
+	if get_parent().get_node_or_null("Jugador") == null:
+		_iniciar_solo()
 
 
 func _process(_delta: float) -> void:
@@ -175,11 +185,84 @@ func _al_llegar_final(cuerpo: Node2D) -> void:
 	_voltear_jugador_hacia(narco.global_position)
 
 
+func _iniciar_solo() -> void:
+	jugador = ESCENA_JUGADOR.instantiate() as Jugador
+	add_child(jugador)
+	jugador.global_position = inicio_jugador.global_position
+	_voltear_jugador("arriba")
+	_limitar_camara(true)
+	GameState.etapa_prologo = GameState.Etapa.NOCHE
+	GameState.guardar_punto_control(jugador.global_position)
+	fase = Fase.ENTRANDO
+	entrada.activo = false
+	_velo.color.a = 1.0
+	await get_tree().physics_frame
+	await _fundido(0.0, 0.7)
+	jugador.puede_moverse = true
+
+
 func _al_acorralar() -> void:
 	if jugador != null:
 		jugador.puede_moverse = false
 		_voltear_jugador_hacia(narco.global_position)
 	mateo_acorralado.emit()
+	await _desenlace_prologo()
+
+
+func _desenlace_prologo() -> void:
+	if GameState.ayudo_a_chente:
+		await HUD.dialogo([
+			HUD.linea("Narco", "¡Hasta aquí llegaste, morro! De este callejón no sales vivo.", RETRATO_NARCO, VOZ_NARCO),
+		])
+
+		await _fundido(1.0, 0.4)
+		var capa := CanvasLayer.new()
+		capa.layer = 0
+		add_child(capa)
+		var img := TextureRect.new()
+		img.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		img.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		img.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+		img.texture = IMG_SOMBRA_NARCO
+		capa.add_child(img)
+		await _fundido(0.0, 0.5)
+
+		await HUD.dialogo([
+			HUD.linea("", "[i][color=#b0b5c4]La piedra de obsidiana en el bolsillo de Mateo arde de golpe. Detrás del sujeto, las sombras del callejón cobran forma.[/color][/i]", null, 1.15),
+			HUD.linea("Mateo", "¿Q-qué es eso detrás de ti...?", RETRATO_MATEO, VOZ_MATEO),
+		])
+
+		img.texture = IMG_NARCO_DESAPARECE
+		await HUD.dialogo([
+			HUD.linea("Narco", "¡¿Qué chingados es esto?! ¡Suelt—!", RETRATO_NARCO_ASUSTADO, VOZ_NARCO),
+			HUD.linea("", "[i][color=#b0b5c4]Un humo negro espeso envuelve al hombre por completo y lo desvanece en la oscuridad.[/color][/i]", null, 1.15),
+		])
+
+		await _fundido(1.0, 0.5)
+		capa.queue_free()
+		narco.visible = false
+		narco.process_mode = Node.PROCESS_MODE_DISABLED
+		await _fundido(0.0, 0.6)
+
+		await HUD.dialogo([
+			HUD.linea("Don Chente", "Te dije que esa piedra no te iba a dejar solo, muchacho...", RETRATO_CHENTE_HIBRIDO_SERIO, VOZ_CHENTE),
+			HUD.linea("Mateo", "¿D-Don Chente...? ¿Usted hizo eso? ¿Qué fue ese humo?", RETRATO_MATEO, VOZ_MATEO),
+			HUD.linea("Don Chente", "Digamos que en esta ciudad hay cosas más viejas que la maña y que los políticos. No lo desperdicies: apenas vas empezando.", RETRATO_CHENTE_HIBRIDO_SONRIENDO, VOZ_CHENTE),
+		])
+
+		await _fundido(1.0, 0.8)
+		HUD.mostrar_marcador(false)
+		await HUD.dialogo([
+			HUD.linea("", "[center][b]FIN DEL PRÓLOGO[/b][/center]", null, 1.15),
+		])
+	else:
+		await HUD.dialogo([
+			HUD.linea("Narco", "Hasta aquí llegaste, morro. Nadie te mandó a meterte donde no te llaman.", RETRATO_NARCO_ENOJADO, VOZ_NARCO),
+			HUD.linea("Mateo", "¡Espera, por favor—!", RETRATO_MATEO, VOZ_MATEO),
+		])
+		await _fundido(1.0, 0.25)
+		HUD.game_over.mensaje = "El narco te acorraló en el callejón sin escapatoria."
+		GameState.perder_todas_vidas()
 
 
 ## Arma la malla de navegación del narco con el área libre y los obstáculos.
@@ -238,7 +321,7 @@ func _aviso_temporal(texto: String, segundos: float) -> void:
 
 func _crear_velo() -> void:
 	var capa := CanvasLayer.new()
-	capa.layer = 10
+	capa.layer = 0
 	add_child(capa)
 	_velo = ColorRect.new()
 	_velo.color = Color(0, 0, 0, 0)
